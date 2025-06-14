@@ -1,0 +1,183 @@
+{
+  "version": "1.1",
+  "description": "认知黑匣子诊断规则库。本文件定义了从用户问题关键词到推荐认知药方的核心匹配逻辑。",
+  "problem_categories": [
+    {
+      "category_name": "团队与创始人问题 (Team & Founder)",
+      "category_id": "CAT_TF",
+      "rules": [
+        {
+          "rule_id": "RULE_TF01_KEVIN_CASE",
+          "description": "诊断核心症状：创始人或合伙人之间存在严重冲突。",
+          "keywords": {
+            "合伙人": 5, "创始人": 5, "冲突": 5, "吵架": 5, "闹掰了": 5, "拆伙": 5, "矛盾": 4, "内耗": 4, "不信任": 4, "分歧": 3, "不合": 3, "搭档": 3, "股东": 3
+          },
+          "threshold": 8,
+          "prescription_id": "P20"
+        },
+        {
+          "rule_id": "RULE_TF02_EXECUTION",
+          "description": "诊断核心症状：团队知行不一，执行力低下。",
+          "keywords": {
+            "执行力": 5, "拖延": 5, "做不到": 4, "完不成": 4, "没进展": 3, "计划": 2, "行动不起来": 5
+          },
+          "threshold": 8,
+          "prescription_id": "P14"
+        },
+        {
+          "rule_id": "RULE_TF03_MOTIVATION",
+          "description": "诊断核心症状：创始人或团队失去激情和内在动力。",
+          "keywords": {
+            "没劲": 5, "失去激情": 5, "倦怠": 4, "为了什么": 4, "空虚": 4, "没动力": 5, "意义": 3
+          },
+          "threshold": 9,
+          "prescription_id": "P24"
+        },
+        {
+          "rule_id": "RULE_TF04_COLLABORATION",
+          "description": "诊断核心症状：团队协作不畅，部门墙严重。",
+          "keywords": {
+            "协作": 5, "配合": 4, "内耗": 4, "部门墙": 5, "各自为战": 4, "沟通不畅": 3, "心理安全": 3
+          },
+          "threshold": 8,
+          "prescription_id": "P56"
+        },
+        {
+          "rule_id": "RULE_TF05_FINANCIAL_ILLITERACY",
+          "description": "诊断核心症状：创始人缺乏财务思维，不懂现金流。",
+          "keywords": {
+            "财务": 4, "现金流": 5, "利润": 3, "成本": 3, "烧钱": 4, "单位经济模型": 5, "看不懂报表": 4
+          },
+          "threshold": 8,
+          "prescription_id": "P57"
+        }
+      ]
+    },
+    {
+      "category_name": "产品与市场问题 (Product & Market)",
+      "category_id": "CAT_PM",
+      "rules": [
+        {
+          "rule_id": "RULE_PM01_TECH_BIAS",
+          "description": "诊断核心症状：技术很强但产品没人用。",
+          "keywords": {
+            "技术": 3, "用户不买账": 5, "没人用": 5, "功能复杂": 4, "不实用": 4, "留存低": 3
+          },
+          "threshold": 8,
+          "prescription_id": "P01"
+        },
+        {
+          "rule_id": "RULE_PM02_NO_PMF",
+          "description": "诊断核心症状：产品与市场不匹配，验证失败。",
+          "keywords": {
+            "没人要": 5, "市场验证": 4, "伪需求": 4, "闭门造车": 4, "PMF": 5, "最小可行产品": 3, "MVP": 3
+          },
+          "threshold": 8,
+          "prescription_id": "P18"
+        },
+        {
+          "rule_id": "RULE_PM03_CHASM",
+          "description": "诊断核心症状：无法从早期用户突破到主流市场。",
+          "keywords": {
+            "鸿沟": 5, "主流市场": 5, "早期用户": 4, "增长停滞": 4, "无法破圈": 4, "实用主义": 3
+          },
+          "threshold": 9,
+          "prescription_id": "P19"
+        },
+        {
+            "rule_id": "RULE_PM04_FEATURE_CREEP",
+            "description": "诊断核心症状：功能堆砌，产品臃肿，核心价值模糊。",
+            "keywords": {
+              "功能太多": 5, "太复杂": 4, "臃肿": 4, "抓不住重点": 4, "什么都想要": 4, "减法": 3
+            },
+            "threshold": 8,
+            "prescription_id": "P04"
+          },
+          {
+            "rule_id": "RULE_PM05_NO_MOAT",
+            "description": "诊断核心症状：产品没粘性，缺乏网络效应和护城河。",
+            "keywords": {
+                "网络效应": 5, "数据飞轮": 5, "护城河": 4, "没粘性": 4, "用户越多越好": 4, "可替代": 3
+            },
+            "threshold": 9,
+            "prescription_id": "P77"
+          }
+      ]
+    },
+    {
+      "category_name": "决策与认知偏差问题 (Decision & Bias)",
+      "category_id": "CAT_DB",
+      "rules": [
+        {
+          "rule_id": "RULE_DB01_CONFIRMATION_BIAS",
+          "description": "诊断核心症状：选择性听取意见，对失败进行合理化解释。",
+          "keywords": {
+            "确认偏误": 5, "听不进": 4, "找借口": 4, "用户不懂": 4, "市场不行": 3, "只看好消息": 4
+          },
+          "threshold": 8,
+          "prescription_id": "P02"
+        },
+        {
+          "rule_id": "RULE_DB02_OVERCONFIDENCE",
+          "description": "诊断核心症状：计划过于乐观，低估风险和难度。",
+          "keywords": {
+            "过度自信": 5, "太乐观": 4, "延期": 3, "肯定能成": 4, "规划谬误": 4, "没问题": 3
+          },
+          "threshold": 8,
+          "prescription_id": "P03"
+        },
+        {
+          "rule_id": "RULE_DB03_SUNK_COST",
+          "description": "诊断核心症状：因为已经投入太多而不敢放弃。",
+          "keywords": {
+            "沉没成本": 5, "舍不得": 4, "已经投了": 4, "骑虎难下": 3, "都走到这一步了": 4, "不甘心": 3
+          },
+          "threshold": 8,
+          "prescription_id": "P06"
+        },
+        {
+            "rule_id": "RULE_DB04_LOSS_AVERSION",
+            "description": "诊断核心症状：害怕损失，过度保守，不敢创新。",
+            "keywords": {
+              "害怕失败": 5, "不敢冒险": 4, "太保守": 4, "维持现状": 4, "损失厌恶": 5, "错失机会": 3
+            },
+            "threshold": 8,
+            "prescription_id": "P08"
+          }
+      ]
+    },
+    {
+        "category_name": "战略与竞争问题 (Strategy & Competition)",
+        "category_id": "CAT_SC",
+        "rules": [
+          {
+            "rule_id": "RULE_SC01_COMPETITION",
+            "description": "诊断核心症状：陷入红海竞争，只会模仿和打价格战。",
+            "keywords": {
+              "竞争激烈": 4, "红海": 4, "价格战": 5, "同质化": 4, "对标": 3, "垄断": 3
+            },
+            "threshold": 8,
+            "prescription_id": "P42"
+          },
+          {
+            "rule_id": "RULE_SC02_SHORT_TERMISM",
+            "description": "诊断核心症状：追逐短期风口，缺乏长期战略。",
+            "keywords": {
+              "短期主义": 5, "追风口": 5, "战略摇摆": 4, "没耐心": 3, "长期主义": 3, "复利": 2
+            },
+            "threshold": 9,
+            "prescription_id": "P44"
+          },
+          {
+            "rule_id": "RULE_SC03_DISRUPTION",
+            "description": "诊断核心症状：被新技术或新模式降维打击。",
+            "keywords": {
+              "被颠覆": 5, "创新者窘境": 5, "转型失败": 4, "看不懂": 3, "第二曲线": 4, "S曲线": 4
+            },
+            "threshold": 9,
+            "prescription_id": "P17"
+          }
+        ]
+      }
+  ]
+}

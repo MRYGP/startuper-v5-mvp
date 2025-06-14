@@ -1,0 +1,82 @@
+{
+  "demo_cases_library": {
+    "meta": {
+      "version": "1.0",
+      "total_cases": 4,
+      "created_date": "2025-06-14",
+      "kevin_case_solution": "case_02_team_conflict",
+      "usage": "P-H-01引导阶段调用，用户体验降门槛"
+    },
+    
+    "cases_index": [
+      {
+        "case_id": "case_01_tech_supremacy",
+        "file_name": "case_01_tech_supremacy.json",
+        "case_name": "技术至上偏见陷阱",
+        "protagonist": "张铭",
+        "background": "前字节跳动算法工程师，AI创业者",
+        "target_trap": "技术至上偏见",
+        "cognitive_impact_score": 9,
+        "user_group": "90%技术背景创业者",
+        "key_lesson": "技术优势≠市场优势",
+        "breakthrough_point": "用户价值 vs 技术价值的认知重构"
+      },
+      {
+        "case_id": "case_02_team_conflict",
+        "file_name": "case_02_team_conflict.json", 
+        "case_name": "团队合伙人冲突认知陷阱",
+        "protagonist": "李华",
+        "background": "连续创业者，三人合伙团队",
+        "target_trap": "团队认知偏差：镜子陷阱",
+        "cognitive_impact_score": 10,
+        "user_group": "有合伙人的创业团队",
+        "key_lesson": "优秀的人≠优秀的团队",
+        "breakthrough_point": "认知一致性 vs 能力互补的重新理解",
+        "special_purpose": "Kevin案例专用解决方案"
+      },
+      {
+        "case_id": "case_03_confirmation_bias",
+        "file_name": "case_03_confirmation_bias.json",
+        "case_name": "确认偏见陷阱",
+        "protagonist": "陈佳", 
+        "background": "前麦肯锡咨询顾问，消费品创业者",
+        "target_trap": "确认偏见：选择性信息收集",
+        "cognitive_impact_score": 9,
+        "user_group": "过度相信自己判断的创业者",
+        "key_lesson": "数据支持≠市场真相",
+        "breakthrough_point": "验证假设 vs 确认假设的思维转换"
+      },
+      {
+        "case_id": "case_04_execution_gap",
+        "file_name": "case_04_execution_gap.json",
+        "case_name": "执行力认知gap陷阱",
+        "protagonist": "王磊",
+        "background": "前产品经理，内容创业者",
+        "target_trap": "知行分离：行动逃避症",
+        "cognitive_impact_score": 8,
+        "user_group": "知道很多但做不到的创业者",
+        "key_lesson": "知道方法≠能够执行",
+        "breakthrough_point": "行动优先 vs 完美计划的价值重排"
+      }
+    ],
+    
+    "usage_instructions": {
+      "trigger_condition": "用户输入内容 < 50字 或 内容过于宽泛",
+      "selection_logic": "根据用户关键词匹配最相关案例",
+      "presentation_format": "角色介绍 + 核心困惑 + 体验邀请",
+      "integration_with_prompts": {
+        "P-H-01": "Demo引导时调用案例简介",
+        "P-H-02": "诊断引擎可参考案例模式",
+        "P-I-01": "质询时可引用相似失败案例"
+      }
+    },
+    
+    "quality_metrics": {
+      "认知冲击力": "8-10分",
+      "用户代入感": "高度相关",
+      "真实性": "具体公司背景+时间线",
+      "覆盖面": "技术、团队、市场、执行四大类陷阱",
+      "Kevin案例解决": "✅ case_02专门处理"
+    }
+  }
+}

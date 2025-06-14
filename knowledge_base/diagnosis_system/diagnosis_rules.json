@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "description": "认知黑匣子诊断规则库升级版 - 增强情感识别和优先级管理",
+  "description": "认知黑匣子诊断规则库增强版 - 完整覆盖主要认知陷阱",
   
   "global_settings": {
     "min_confidence_threshold": 0.6,
@@ -21,7 +21,8 @@
           "keywords": {
             "合伙人": 5, "创始人": 5, "冲突": 5, "吵架": 5,
             "闹掰了": 5, "拆伙": 5, "分歧": 4, "内耗": 4,
-            "不信任": 4, "决策权": 4, "股权": 3, "退出": 4
+            "不信任": 4, "决策权": 4, "股权": 3, "退出": 4,
+            "技术合伙人": 5, "产品方向": 3, "争论": 4
           },
           "emotional_patterns": {
             "愤怒情绪": 3, "失望情绪": 3, "困惑情绪": 2,
@@ -34,9 +35,33 @@
           "prescription_id": "P20",
           "confidence_boost": 0.3,
           "special_flags": ["kevin_case_solution", "high_priority"]
+        },
+        {
+          "rule_id": "RULE_TF02_EXECUTION_GAP",
+          "description": "执行力认知gap：知道但做不到",
+          "keywords": {
+            "执行力": 5, "拖延": 5, "做不到": 4, "完不成": 4,
+            "没进展": 3, "计划": 2, "行动不起来": 5, "知道但做不到": 5
+          },
+          "emotional_patterns": {
+            "自我怀疑": 4, "焦虑": 3, "拖延情绪": 5
+          },
+          "threshold": 8,
+          "prescription_id": "P14"
+        },
+        {
+          "rule_id": "RULE_TF03_TEAM_COLLABORATION",
+          "description": "团队协作不畅，部门墙严重",
+          "keywords": {
+            "协作": 5, "配合": 4, "内耗": 4, "部门墙": 5,
+            "各自为战": 4, "沟通不畅": 3, "心理安全": 3
+          },
+          "threshold": 8,
+          "prescription_id": "P56"
         }
       ]
     },
+    
     {
       "category_name": "产品与市场问题 (Product & Market)", 
       "category_id": "CAT_PM",
@@ -48,7 +73,7 @@
           "keywords": {
             "技术": 3, "用户不买账": 5, "没人用": 5,
             "功能强大": 4, "技术领先": 4, "不实用": 4,
-            "太复杂": 4, "用户不懂": 4
+            "太复杂": 4, "用户不懂": 4, "算法": 3, "性能": 3
           },
           "emotional_patterns": {
             "技术自豪": 4, "用户困惑": 2, "市场挫败": 3
@@ -58,6 +83,113 @@
           },
           "threshold": 8,
           "prescription_id": "P01"
+        },
+        {
+          "rule_id": "RULE_PM02_NO_PMF",
+          "description": "产品与市场不匹配，验证失败",
+          "keywords": {
+            "没人要": 5, "市场验证": 4, "伪需求": 4, "闭门造车": 4,
+            "PMF": 5, "最小可行产品": 3, "MVP": 3, "用户调研": 3
+          },
+          "threshold": 8,
+          "prescription_id": "P18"
+        },
+        {
+          "rule_id": "RULE_PM03_USER_PERSONA_BLUR",
+          "description": "用户画像模糊，定位不清",
+          "keywords": {
+            "目标用户": 4, "所有人": 5, "用户画像": 5, "定位模糊": 4,
+            "市场细分": 3, "用户需求": 3, "客户群体": 3
+          },
+          "threshold": 8,
+          "prescription_id": "P54"
+        }
+      ]
+    },
+    
+    {
+      "category_name": "决策与认知偏差问题 (Decision & Bias)",
+      "category_id": "CAT_DB",
+      "priority_score": 8,
+      "rules": [
+        {
+          "rule_id": "RULE_DB01_CONFIRMATION_BIAS",
+          "description": "确认偏误：选择性听取意见",
+          "keywords": {
+            "确认偏误": 5, "听不进": 4, "找借口": 4, "用户不懂": 4,
+            "市场不行": 3, "只看好消息": 4, "数据支持": 3, "调研": 3
+          },
+          "emotional_patterns": {
+            "自我防御": 4, "选择性关注": 5
+          },
+          "threshold": 8,
+          "prescription_id": "P02"
+        },
+        {
+          "rule_id": "RULE_DB02_OVERCONFIDENCE",
+          "description": "过度自信：计划过于乐观",
+          "keywords": {
+            "过度自信": 5, "太乐观": 4, "延期": 3, "肯定能成": 4,
+            "规划谬误": 4, "没问题": 3, "一定成功": 4
+          },
+          "threshold": 8,
+          "prescription_id": "P03"
+        },
+        {
+          "rule_id": "RULE_DB03_SUNK_COST",
+          "description": "沉没成本：因为已投入而不敢放弃",
+          "keywords": {
+            "沉没成本": 5, "舍不得": 4, "已经投了": 4, "骑虎难下": 3,
+            "都走到这一步了": 4, "不甘心": 3, "投入太多": 4
+          },
+          "threshold": 8,
+          "prescription_id": "P06"
+        }
+      ]
+    },
+    
+    {
+      "category_name": "战略与竞争问题 (Strategy & Competition)",
+      "category_id": "CAT_SC",
+      "priority_score": 7,
+      "rules": [
+        {
+          "rule_id": "RULE_SC01_RED_OCEAN",
+          "description": "红海竞争：只会模仿和打价格战",
+          "keywords": {
+            "竞争激烈": 4, "红海": 4, "价格战": 5, "同质化": 4,
+            "对标": 3, "垄断": 3, "差异化": 3, "竞争对手": 3
+          },
+          "threshold": 8,
+          "prescription_id": "P42"
+        },
+        {
+          "rule_id": "RULE_SC02_SHORT_TERMISM",
+          "description": "短期主义：追逐风口，缺乏长期战略",
+          "keywords": {
+            "短期主义": 5, "追风口": 5, "战略摇摆": 4, "没耐心": 3,
+            "长期主义": 3, "复利": 2, "风口": 4, "热点": 3
+          },
+          "threshold": 9,
+          "prescription_id": "P44"
+        }
+      ]
+    },
+    
+    {
+      "category_name": "商业模式问题 (Business Model)",
+      "category_id": "CAT_BM", 
+      "priority_score": 9,
+      "rules": [
+        {
+          "rule_id": "RULE_BM01_MONETIZATION_CONFUSION",
+          "description": "产品中心主义：不知道如何变现",
+          "keywords": {
+            "不知道怎么赚钱": 5, "商业模式": 4, "变现": 4, "盈利": 3,
+            "产品好": 3, "商业化": 4, "收入模式": 4
+          },
+          "threshold": 8,
+          "prescription_id": "P26"
         }
       ]
     }
@@ -79,6 +211,11 @@
     "step4_confidence_calculation": {
       "description": "最终置信度计算",
       "formula": "(keyword_score + emotional_score + context_score) / max_possible_score"
+    },
+    "step5_kevin_case_boost": {
+      "description": "Kevin案例特殊加权",
+      "condition": "如果匹配RULE_TF01_KEVIN_CASE_ENHANCED",
+      "boost_factor": 1.5
     }
   },
 
@@ -90,6 +227,12 @@
         "confidence": "> 0.9",
         "prescription": "P20"
       }
+    },
+    "coverage_test": {
+      "tech_supremacy": "RULE_PM01_TECH_BIAS_ENHANCED -> P01",
+      "confirmation_bias": "RULE_DB01_CONFIRMATION_BIAS -> P02", 
+      "execution_gap": "RULE_TF02_EXECUTION_GAP -> P14",
+      "business_model": "RULE_BM01_MONETIZATION_CONFUSION -> P26"
     },
     "false_positive_prevention": {
       "description": "防止误诊的保护机制",

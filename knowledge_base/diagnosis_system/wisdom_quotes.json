@@ -1,320 +1,256 @@
 {
-  "version": "1.0",
-  "description": "智慧金句库 - 用于各个环节的权威引言和深度思考",
+  "version": "2.0",
+  "description": "智慧金句库 - 集成知识库药方金句 + 通用金句库",
   "last_updated": "2025-06-14",
   
-  "quote_categories": {
-    "认知觉醒": {
-      "category_id": "cognitive_awakening",
-      "description": "关于认知盲区和思维误区的经典洞察",
-      "quotes": [
-        {
-          "quote_id": "awakening_001",
-          "text": "The first principle is that you must not fool yourself — and you are the easiest person to fool.",
-          "chinese_translation": "第一原理是你不能欺骗自己——而你是最容易被欺骗的人。",
-          "author": "Richard Feynman",
-          "author_chinese": "理查德·费曼",
-          "source": "Nobel Prize-winning physicist",
-          "context": "科学方法论",
-          "applicable_scenarios": ["认知偏见", "自我欺骗", "确认偏见"],
-          "impact_score": 10,
-          "usage_frequency": "high"
-        },
-        {
-          "quote_id": "awakening_002", 
-          "text": "It ain't what you don't know that gets you into trouble. It's what you know for sure that just ain't so.",
-          "chinese_translation": "让你陷入麻烦的不是你不知道的事，而是你确信无疑但实际错误的事。",
-          "author": "Mark Twain",
-          "author_chinese": "马克·吐温",
-          "source": "American writer and humorist",
-          "context": "认知陷阱警示",
-          "applicable_scenarios": ["过度自信", "知识盲区", "假设验证"],
-          "impact_score": 9,
-          "usage_frequency": "high"
-        },
-        {
-          "quote_id": "awakening_003",
-          "text": "The greatest enemy of knowledge is not ignorance, it is the illusion of knowledge.",
-          "chinese_translation": "知识最大的敌人不是无知，而是知识的错觉。",
-          "author": "Stephen Hawking",
-          "author_chinese": "史蒂芬·霍金",
-          "source": "Theoretical physicist",
-          "context": "科学认知",
-          "applicable_scenarios": ["知识错觉", "学习陷阱", "专业盲区"],
-          "impact_score": 9,
-          "usage_frequency": "medium"
-        }
-      ]
+  "data_sources": {
+    "primary": "knowledge_base药方文件中的核心智慧部分",
+    "secondary": "通用金句库补充",
+    "extraction_method": "动态解析markdown文件中的金句内容"
+  },
+  
+  "prescription_quotes_mapping": {
+    "description": "从药方文件中提取的金句映射",
+    "extraction_rules": {
+      "markdown_pattern": "## 💎 核心智慧（名人金句）",
+      "quote_pattern": "> **\"(.+?)\"** .*?—— (.+)",
+      "explanation_pattern": "\\*\\*金句深层含义\\*\\*：(.+)"
     },
-    
-    "团队合作": {
-      "category_id": "teamwork",
-      "description": "关于团队协作、领导力和组织管理的智慧",
-      "quotes": [
-        {
-          "quote_id": "team_001",
-          "text": "If you want to go fast, go alone. If you want to go far, go together.",
-          "chinese_translation": "如果你想走得快，一个人走。如果你想走得远，一起走。",
-          "author": "African Proverb",
-          "author_chinese": "非洲谚语",
-          "source": "Traditional wisdom",
-          "context": "团队价值",
-          "applicable_scenarios": ["团队建设", "合作重要性", "长期发展"],
-          "impact_score": 8,
-          "usage_frequency": "high"
-        },
-        {
-          "quote_id": "team_002",
-          "text": "Great teams are not made up of many well-rounded players. Great teams are made up of players who specialize in what they do best.",
-          "chinese_translation": "伟大的团队不是由许多全能选手组成的，而是由专精于自己最擅长领域的选手组成的。",
-          "author": "Tom Peters",
-          "author_chinese": "汤姆·彼得斯",
-          "source": "Management consultant and author",
-          "context": "团队互补性",
-          "applicable_scenarios": ["人才配置", "专业分工", "团队优化"],
-          "impact_score": 8,
-          "usage_frequency": "medium"
-        },
-        {
-          "quote_id": "team_003",
-          "text": "The strength of the team is each individual member. The strength of each member is the team.",
-          "chinese_translation": "团队的力量在于每个成员，每个成员的力量在于团队。",
-          "author": "Phil Jackson",
-          "author_chinese": "菲尔·杰克逊",
-          "source": "NBA championship coach",
-          "context": "团队协同",
-          "applicable_scenarios": ["团队精神", "个人与集体", "协同效应"],
-          "impact_score": 7,
-          "usage_frequency": "medium"
-        }
-      ]
+    "known_mappings": {
+      "P20": {
+        "prescription_name": "创始人冲突认知解码器",
+        "core_quotes": [
+          {
+            "text": "Great teams are not made up of many well-rounded players. Great teams are made up of players who specialize in what they do best.",
+            "chinese_translation": "伟大的团队不是由许多全能选手组成的，而是由专精于自己最擅长领域的选手组成的。",
+            "author": "Tom Peters",
+            "deep_meaning": "团队成功的关键在于专业化分工，而非个人能力的全面性",
+            "context": "团队认知偏差"
+          }
+        ]
+      },
+      "P54": {
+        "prescription_name": "用户画像精准化剂",
+        "core_quotes": [
+          {
+            "text": "If you want to serve everyone, you can't provide excellent service to anyone.",
+            "chinese_translation": "如果你想为所有人服务，你就无法为任何人提供卓越的服务。",
+            "author": "市场细分的智慧",
+            "deep_meaning": "卓越的服务来自于对特定用户群体需求的深度满足",
+            "context": "用户画像精准化"
+          },
+          {
+            "text": "Design for the specific, and you will delight the general.",
+            "chinese_translation": "为具体而设计，你将取悦大众。",
+            "author": "经典设计原则",
+            "deep_meaning": "最好的产品往往从为具体用户解决具体问题开始",
+            "context": "产品设计哲学"
+          }
+        ]
+      },
+      "P60": {
+        "prescription_name": "第二曲线思维剂",
+        "core_quotes": [
+          {
+            "text": "The paradox of the S-curve is that when you are at the top of it, you feel on top of the world. But it is at that very point that you need to be starting the next curve.",
+            "chinese_translation": "S曲线的悖论在于，当你处于它的顶峰时，你感觉自己站在了世界之巅。但恰恰是在那个时刻，你就需要开始你的下一条曲线了。",
+            "author": "查尔斯·汉迪",
+            "deep_meaning": "启动第二曲线最反人性、也最关键的时机是在巅峰时刻",
+            "context": "战略转型时机"
+          },
+          {
+            "text": "To manage a second curve, you need a second team.",
+            "chinese_translation": "要管理第二曲线，你需要第二支团队。",
+            "author": "查尔斯·汉迪",
+            "deep_meaning": "第二曲线成功需要不同的人才、文化和考核标准",
+            "context": "组织变革管理"
+          }
+        ]
+      },
+      "P26": {
+        "prescription_name": "商业模式设计思维剂",
+        "core_quotes": [
+          {
+            "text": "A business model describes how your company creates, delivers, and monetizes value.",
+            "chinese_translation": "商业模式描述了你的公司如何创造、交付和货币化价值。",
+            "author": "商业模式画布",
+            "deep_meaning": "商业模式是价值创造的系统性设计",
+            "context": "商业模式设计"
+          }
+        ]
+      }
+    }
+  },
+  
+  "dynamic_extraction_system": {
+    "description": "动态从药方文件中提取金句的系统",
+    "implementation": {
+      "step1": "扫描knowledge_base目录中的所有.md文件",
+      "step2": "使用正则表达式提取'💎 核心智慧'部分",
+      "step3": "解析引用格式的金句和作者信息",
+      "step4": "提取'金句深层含义'的解释内容",
+      "step5": "构建prescription_id到quotes的映射关系"
     },
-    
-    "创新与技术": {
-      "category_id": "innovation_tech",
-      "description": "关于技术创新、产品开发和技术思维的洞察",
-      "quotes": [
-        {
-          "quote_id": "tech_001",
-          "text": "Technology is nothing. What's important is that you have a faith in people, that they're basically good and smart, and if you give them tools, they'll do wonderful things with them.",
-          "chinese_translation": "技术不算什么。重要的是你要相信人们本质上是善良和聪明的，如果你给他们工具，他们会用这些工具做出精彩的事情。",
-          "author": "Steve Jobs",
-          "author_chinese": "史蒂夫·乔布斯",
-          "source": "Apple co-founder",
-          "context": "技术的人本价值",
-          "applicable_scenarios": ["技术至上偏见", "用户中心设计", "产品哲学"],
-          "impact_score": 10,
-          "usage_frequency": "high"
-        },
-        {
-          "quote_id": "tech_002",
-          "text": "Innovation distinguishes between a leader and a follower.",
-          "chinese_translation": "创新区分了领导者和跟随者。",
-          "author": "Steve Jobs", 
-          "author_chinese": "史蒂夫·乔布斯",
-          "source": "Apple co-founder",
-          "context": "创新重要性",
-          "applicable_scenarios": ["创新思维", "差异化竞争", "领导力"],
-          "impact_score": 8,
-          "usage_frequency": "high"
-        },
-        {
-          "quote_id": "tech_003",
-          "text": "The best way to predict the future is to invent it.",
-          "chinese_translation": "预测未来的最好方法就是创造未来。",
-          "author": "Alan Kay",
-          "author_chinese": "艾伦·凯",
-          "source": "Computer scientist",
-          "context": "主动创新",
-          "applicable_scenarios": ["创新者思维", "主动出击", "未来规划"],
-          "impact_score": 9,
-          "usage_frequency": "medium"
-        }
-      ]
-    },
-    
-    "商业智慧": {
-      "category_id": "business_wisdom",
-      "description": "关于商业策略、市场洞察和企业经营的经典智慧",
-      "quotes": [
-        {
-          "quote_id": "business_001",
-          "text": "Your customer doesn't care how much you know until they know how much you care.",
-          "chinese_translation": "客户不在乎你知道多少，直到他们知道你有多在乎他们。",
-          "author": "Damon Richards",
-          "author_chinese": "达蒙·理查兹",
-          "source": "Business consultant",
-          "context": "客户关系",
-          "applicable_scenarios": ["客户导向", "用户体验", "服务意识"],
-          "impact_score": 8,
-          "usage_frequency": "high"
-        },
-        {
-          "quote_id": "business_002",
-          "text": "Build something 100 people love, not something 1 million people kind of like.",
-          "chinese_translation": "构建100个人热爱的东西，而不是100万人有点喜欢的东西。",
-          "author": "Brian Chesky",
-          "author_chinese": "布莱恩·切斯基",
-          "source": "Airbnb co-founder",
-          "context": "产品专注",
-          "applicable_scenarios": ["产品定位", "用户画像", "市场细分"],
-          "impact_score": 9,
-          "usage_frequency": "high"
-        },
-        {
-          "quote_id": "business_003",
-          "text": "The biggest risk is not taking any risk... In a world that's changing quickly, the only strategy that is guaranteed to fail is not taking risks.",
-          "chinese_translation": "最大的风险就是不承担任何风险...在一个快速变化的世界里，唯一注定失败的策略就是不承担风险。",
-          "author": "Mark Zuckerberg",
-          "author_chinese": "马克·扎克伯格",
-          "source": "Facebook founder",
-          "context": "风险管理",
-          "applicable_scenarios": ["风险决策", "创新勇气", "变化适应"],
-          "impact_score": 8,
-          "usage_frequency": "medium"
-        }
-      ]
-    },
-    
-    "学习与成长": {
-      "category_id": "learning_growth",
-      "description": "关于学习方法、个人成长和持续改进的智慧",
-      "quotes": [
-        {
-          "quote_id": "learning_001",
-          "text": "Live as if you were to die tomorrow. Learn as if you were to live forever.",
-          "chinese_translation": "像明天就要死去那样生活，像永远都会活着那样学习。",
-          "author": "Mahatma Gandhi",
-          "author_chinese": "圣雄甘地",
-          "source": "Indian independence leader",
-          "context": "终身学习",
-          "applicable_scenarios": ["学习态度", "成长心态", "知识追求"],
-          "impact_score": 9,
-          "usage_frequency": "medium"
-        },
-        {
-          "quote_id": "learning_002",
-          "text": "The more that you read, the more things you will know. The more that you learn, the more places you'll go.",
-          "chinese_translation": "读得越多，知道的就越多。学得越多，去的地方就越多。",
-          "author": "Dr. Seuss",
-          "author_chinese": "苏斯博士",
-          "source": "Children's book author",
-          "context": "学习价值",
-          "applicable_scenarios": ["知识积累", "视野拓展", "能力提升"],
-          "impact_score": 7,
-          "usage_frequency": "low"
-        }
-      ]
-    },
-    
-    "决策与判断": {
-      "category_id": "decision_making",
-      "description": "关于决策方法、判断力和理性思维的洞察",
-      "quotes": [
-        {
-          "quote_id": "decision_001",
-          "text": "In any moment of decision, the best thing you can do is the right thing, the next best thing is the wrong thing, and the worst thing you can do is nothing.",
-          "chinese_translation": "在任何决策时刻，你能做的最好的事就是正确的事，次好的是错误的事，而最糟糕的是什么都不做。",
-          "author": "Theodore Roosevelt",
-          "author_chinese": "西奥多·罗斯福",
-          "source": "26th President of the United States",
-          "context": "决策行动",
-          "applicable_scenarios": ["决策勇气", "行动力", "机会把握"],
-          "impact_score": 8,
-          "usage_frequency": "medium"
-        },
-        {
-          "quote_id": "decision_002",
-          "text": "It is not the strongest of the species that survives, nor the most intelligent, but the one most responsive to change.",
-          "chinese_translation": "能够生存下来的物种，不是最强壮的，也不是最聪明的，而是最能适应变化的。",
-          "author": "Charles Darwin",
-          "author_chinese": "查尔斯·达尔文",
-          "source": "Naturalist and biologist",
-          "context": "适应能力",
-          "applicable_scenarios": ["变化应对", "灵活性", "进化思维"],
-          "impact_score": 9,
-          "usage_frequency": "high"
-        }
+    "code_example": {
+      "python": [
+        "import re",
+        "from pathlib import Path",
+        "",
+        "def extract_quotes_from_prescription(file_path):",
+        "    with open(file_path, 'r', encoding='utf-8') as f:",
+        "        content = f.read()",
+        "    ",
+        "    # 提取核心智慧部分",
+        "    wisdom_pattern = r'## 💎 核心智慧（名人金句）(.*?)(?=##|$)'",
+        "    wisdom_match = re.search(wisdom_pattern, content, re.DOTALL)",
+        "    ",
+        "    if wisdom_match:",
+        "        wisdom_content = wisdom_match.group(1)",
+        "        # 提取金句",
+        "        quote_pattern = r'> \\*\\*\"(.+?)\"\\*\\* .*?—— (.+?)\\n\\n\\*\\*金句深层含义\\*\\*：(.+?)\\n'",
+        "        quotes = re.findall(quote_pattern, wisdom_content, re.DOTALL)",
+        "        return quotes",
+        "    return []"
       ]
     }
   },
   
-  "contextual_quotes": {
-    "opening_quotes": [
+  "supplementary_quotes": {
+    "description": "补充通用金句，用于没有特定药方对应的场景",
+    "general_wisdom": [
       {
-        "text": "The unexamined life is not worth living.",
-        "chinese_translation": "未经审视的人生不值得过。",
-        "author": "Socrates",
-        "usage": "开场时引发思考"
+        "quote_id": "general_001",
+        "text": "The first principle is that you must not fool yourself — and you are the easiest person to fool.",
+        "chinese_translation": "第一原理是你不能欺骗自己——而你是最容易被欺骗的人。",
+        "author": "Richard Feynman",
+        "context": "认知觉醒开场",
+        "usage_scenarios": ["诊断开始", "认知冲击", "自我反思"],
+        "impact_score": 10
       },
       {
-        "text": "Question everything. Learn something. Answer nothing.",
-        "chinese_translation": "质疑一切，学习一些，不回答任何事。",
-        "author": "Euripides",
-        "usage": "苏格拉底式教学开场"
-      }
-    ],
-    
-    "closing_quotes": [
-      {
-        "text": "The only true wisdom is in knowing you know nothing.",
-        "chinese_translation": "唯一真正的智慧是知道你什么都不知道。",
-        "author": "Socrates",
-        "usage": "认知觉醒后的谦逊提醒"
-      },
-      {
+        "quote_id": "general_002",
         "text": "We cannot solve our problems with the same thinking we used when we created them.",
         "chinese_translation": "我们无法用创造问题时的思维来解决问题。",
         "author": "Albert Einstein",
-        "usage": "认知重构完成时的总结"
-      }
-    ],
-    
-    "transition_quotes": [
+        "context": "认知重构总结",
+        "usage_scenarios": ["教学结束", "认知转换", "思维升级"],
+        "impact_score": 9
+      },
       {
-        "text": "The first step toward change is awareness. The second step is acceptance.",
-        "chinese_translation": "改变的第一步是意识，第二步是接受。",
-        "author": "Nathaniel Branden",
-        "usage": "从诊断到教学的过渡"
+        "quote_id": "general_003",
+        "text": "The unexamined life is not worth living.",
+        "chinese_translation": "未经审视的人生不值得过。",
+        "author": "Socrates",
+        "context": "苏格拉底式引导",
+        "usage_scenarios": ["深度思考", "自我审视", "哲学思辨"],
+        "impact_score": 9
       }
     ]
   },
   
-  "random_selection_pools": {
-    "high_impact": {
-      "description": "高冲击力金句，用于关键时刻",
-      "quote_ids": ["awakening_001", "awakening_002", "tech_001", "business_002", "decision_002"],
-      "usage_frequency": "high"
-    },
-    "inspirational": {
-      "description": "激励性金句，用于鼓舞士气",
-      "quote_ids": ["tech_002", "tech_003", "business_003", "decision_001"],
-      "usage_frequency": "medium"
-    },
-    "reflective": {
-      "description": "反思性金句，用于深度思考",
-      "quote_ids": ["awakening_003", "learning_001", "team_003"],
-      "usage_frequency": "medium"
+  "quote_selection_algorithm": {
+    "description": "智能金句选择算法",
+    "priority_rules": [
+      {
+        "rule": "优先使用与诊断药方相关的金句",
+        "weight": 10,
+        "method": "从prescription_quotes_mapping中查找对应金句"
+      },
+      {
+        "rule": "根据使用场景选择合适的通用金句",
+        "weight": 8,
+        "method": "根据usage_scenarios匹配当前环节"
+      },
+      {
+        "rule": "考虑金句的影响力评分",
+        "weight": 6,
+        "method": "优先选择impact_score高的金句"
+      },
+      {
+        "rule": "避免重复使用相同金句",
+        "weight": 5,
+        "method": "维护会话内的已使用金句列表"
+      }
+    ],
+    "contextual_matching": {
+      "opening": ["general_003", "general_001"],
+      "diagnosis": ["prescription_specific_quotes"],
+      "teaching": ["prescription_specific_quotes", "general_002"],
+      "closing": ["general_002", "general_001"]
     }
   },
   
-  "usage_instructions": {
-    "selection_criteria": [
-      "根据用户诊断出的认知陷阱类型选择相关类别的金句",
-      "开场使用opening_quotes，结尾使用closing_quotes",
-      "高冲击时刻优先使用high_impact池中的金句",
-      "考虑金句的impact_score和usage_frequency"
-    ],
-    "presentation_format": [
-      "先展示英文原文，增加权威感",
-      "再提供中文翻译，确保理解",
-      "注明作者和身份，增加可信度",
-      "适当解释金句在当前情境下的含义"
-    ],
-    "frequency_control": [
-      "同一个金句在单次会话中最多使用一次",
-      "high频率金句优先选择，但要避免过度重复",
-      "根据用户反馈调整金句的使用频率"
+  "api_interface": {
+    "description": "提供给AI提示词系统的调用接口",
+    "functions": [
+      {
+        "name": "get_quote_by_prescription",
+        "description": "根据药方ID获取相关金句",
+        "parameters": {
+          "prescription_id": "string",
+          "context": "string (optional)",
+          "max_quotes": "integer (default: 1)"
+        },
+        "return": "list of quote objects"
+      },
+      {
+        "name": "get_contextual_quote",
+        "description": "根据使用场景获取合适金句",
+        "parameters": {
+          "context": "string (opening|diagnosis|teaching|closing)",
+          "exclude_used": "list of quote_ids (optional)"
+        },
+        "return": "quote object"
+      },
+      {
+        "name": "extract_quotes_from_knowledge_base",
+        "description": "动态从知识库提取金句",
+        "parameters": {
+          "knowledge_base_path": "string",
+          "refresh_cache": "boolean (default: false)"
+        },
+        "return": "updated prescription_quotes_mapping"
+      }
     ]
+  },
+  
+  "integration_benefits": {
+    "data_consistency": "金句与药方内容保持一致，避免冲突",
+    "maintenance_efficiency": "只需在药方文件中维护金句，自动同步",
+    "contextual_relevance": "金句与诊断结果高度相关，增强说服力",
+    "dynamic_expansion": "新增药方时自动提取金句，无需手动更新",
+    "storage_optimization": "避免数据重复，减少存储空间"
+  },
+  
+  "fallback_mechanism": {
+    "description": "当知识库金句不可用时的备用方案",
+    "conditions": [
+      "药方文件不存在或无法读取",
+      "金句格式不符合解析规则",
+      "动态提取系统故障"
+    ],
+    "actions": [
+      "使用supplementary_quotes中的通用金句",
+      "记录错误日志用于后续修复",
+      "保证系统正常运行不受影响"
+    ]
+  },
+  
+  "usage_examples": {
+    "scenario_1": {
+      "description": "用户被诊断为P20（创始人冲突），需要相关金句",
+      "api_call": "get_quote_by_prescription('P20', 'teaching')",
+      "expected_result": "Tom Peters关于团队专业化的金句"
+    },
+    "scenario_2": {
+      "description": "15分钟流程开场，需要引发思考的金句",
+      "api_call": "get_contextual_quote('opening')",
+      "expected_result": "Socrates关于审视人生的金句"
+    },
+    "scenario_3": {
+      "description": "知识库新增药方P99，需要提取其中的金句",
+      "api_call": "extract_quotes_from_knowledge_base('/knowledge_base')",
+      "expected_result": "更新prescription_quotes_mapping，包含P99的金句"
+    }
   }
 }

@@ -1,0 +1,194 @@
+{
+  "version": "1.0",
+  "description": "创业失败案例库 - 用于投资人质询时的震撼对比",
+  "last_updated": "2025-06-14",
+  
+  "failure_categories": {
+    "团队认知偏差": {
+      "category_id": "team_cognitive_bias",
+      "cases": [
+        {
+          "case_id": "team_001",
+          "company_name": "某知名SaaS公司",
+          "founder_background": "三位前BAT高管联合创业",
+          "failure_year": "2023",
+          "initial_valuation": "5000万人民币A轮",
+          "core_problem": "三位创始人在产品战略上产生根本分歧，CEO偏向B端，CTO坚持C端，COO主张双轨并行",
+          "failure_timeline": "18个月内从意见分歧→公开争论→董事会分裂→团队解散",
+          "financial_loss": "烧光3000万，团队30人全部离职",
+          "cognitive_trap": "强强联合幻觉 - 认为优秀的人组合就能成功",
+          "failure_quote": "我们都是对的，但我们在一起就是错的",
+          "lessons_learned": "认知一致性比能力互补更重要",
+          "shock_factor": 9
+        },
+        {
+          "case_id": "team_002", 
+          "company_name": "某AI芯片公司",
+          "founder_background": "清华博士+硅谷归国团队",
+          "failure_year": "2024",
+          "initial_valuation": "2亿人民币B轮",
+          "core_problem": "技术合伙人坚持做通用芯片，商务合伙人主张专用芯片，争论2年无果",
+          "failure_timeline": "24个月烧钱无产品，投资人失去信心",
+          "financial_loss": "1.5亿资金，错失市场窗口期",
+          "cognitive_trap": "技术理想主义 vs 商业现实主义的认知鸿沟",
+          "failure_quote": "我们用最聪明的方式做了最愚蠢的决定",
+          "lessons_learned": "技术路线的选择需要认知框架的统一",
+          "shock_factor": 8
+        }
+      ]
+    },
+    
+    "技术至上偏见": {
+      "category_id": "tech_supremacy_bias",
+      "cases": [
+        {
+          "case_id": "tech_001",
+          "company_name": "Google Wave",
+          "founder_background": "Google内部明星团队",
+          "failure_year": "2012",
+          "initial_valuation": "数十亿美元级别项目",
+          "core_problem": "技术上极其先进的实时协作平台，但用户觉得'太复杂了'",
+          "failure_timeline": "2年开发，2年推广失败，最终关停",
+          "financial_loss": "数亿美元研发投入",
+          "cognitive_trap": "技术先进 = 用户需要的错误等式",
+          "failure_quote": "我们解决了用户没有的问题",
+          "lessons_learned": "技术价值不等于用户价值",
+          "shock_factor": 10
+        },
+        {
+          "case_id": "tech_002",
+          "company_name": "某区块链公司",
+          "founder_background": "前以太坊核心开发者",
+          "failure_year": "2023",
+          "initial_valuation": "8000万美元A轮",
+          "core_problem": "开发了TPS最高的区块链，但生态应用寥寥无几",
+          "failure_timeline": "3年技术开发，1年市场推广无果",
+          "financial_loss": "5000万美元，团队解散",
+          "cognitive_trap": "性能指标崇拜，忽视生态建设",
+          "failure_quote": "我们造了最快的高速公路，但没人想去那个目的地",
+          "lessons_learned": "生态价值比技术性能更重要",
+          "shock_factor": 8
+        }
+      ]
+    },
+    
+    "确认偏见": {
+      "category_id": "confirmation_bias", 
+      "cases": [
+        {
+          "case_id": "confirm_001",
+          "company_name": "某新消费品牌",
+          "founder_background": "前麦肯锡合伙人",
+          "failure_year": "2023",
+          "initial_valuation": "3000万人民币A轮",
+          "core_problem": "基于'精准'的市场调研，95%受访者表示'一定会购买'，实际转化率不到2%",
+          "failure_timeline": "6个月调研，12个月产品开发，6个月销售惨淡",
+          "financial_loss": "2500万资金，库存积压严重",
+          "cognitive_trap": "选择性收集支持性证据，忽视反对信号",
+          "failure_quote": "用户说谎了，还是我们听错了？",
+          "lessons_learned": "用户说的和用户做的是两回事",
+          "shock_factor": 9
+        },
+        {
+          "case_id": "confirm_002",
+          "company_name": "某教育科技公司",
+          "founder_background": "前新东方高管",
+          "failure_year": "2024", 
+          "initial_valuation": "1.2亿人民币B轮",
+          "core_problem": "坚信'个性化教学'是刚需，投入大量资源开发AI系统，但用户更喜欢标准化课程",
+          "failure_timeline": "18个月产品开发，12个月市场验证失败",
+          "financial_loss": "8000万资金，团队从200人缩减至50人",
+          "cognitive_trap": "理想需求 vs 真实需求的认知偏差",
+          "failure_quote": "我们给了用户想要的，但不是他们需要的",
+          "lessons_learned": "需求验证要看行为，不听话语",
+          "shock_factor": 8
+        }
+      ]
+    },
+    
+    "执行力认知gap": {
+      "category_id": "execution_gap",
+      "cases": [
+        {
+          "case_id": "exec_001",
+          "company_name": "某内容创业公司",
+          "founder_background": "前字节跳动产品经理",
+          "failure_year": "2024",
+          "initial_valuation": "500万人民币天使轮",
+          "core_problem": "制定了完美的内容策略和增长计划，但执行不到位，内容更新断断续续",
+          "failure_timeline": "2年时间，计划修改了8次，实际产出不到计划的30%",
+          "financial_loss": "400万资金，机会成本巨大",
+          "cognitive_trap": "计划制定专家，执行菜鸟",
+          "failure_quote": "我们的PPT做得比产品还好",
+          "lessons_learned": "知道和做到之间隔着一万里",
+          "shock_factor": 7
+        }
+      ]
+    },
+    
+    "战略短视": {
+      "category_id": "strategic_myopia",
+      "cases": [
+        {
+          "case_id": "strategy_001",
+          "company_name": "柯达公司",
+          "founder_background": "百年影像巨头",
+          "failure_year": "2012",
+          "initial_valuation": "曾经市值310亿美元",
+          "core_problem": "发明了数码相机技术，但害怕冲击胶卷业务，错失数码转型",
+          "failure_timeline": "30年从技术领先到市场出局",
+          "financial_loss": "从310亿美元到破产",
+          "cognitive_trap": "成功经验的惯性思维",
+          "failure_quote": "我们的优势成了我们的包袱",
+          "lessons_learned": "颠覆自己，否则被别人颠覆",
+          "shock_factor": 10
+        },
+        {
+          "case_id": "strategy_002",
+          "company_name": "诺基亚",
+          "founder_background": "手机行业霸主",
+          "failure_year": "2014",
+          "initial_valuation": "曾经市值2500亿美元",
+          "core_problem": "坚持塞班系统，低估了触屏智能手机的颠覆性",
+          "failure_timeline": "5年从王者到边缘化",
+          "financial_loss": "手机业务出售给微软",
+          "cognitive_trap": "技术路径锁定，认知更新滞后",
+          "failure_quote": "我们没有做错什么，但我们输了",
+          "lessons_learned": "在正确的道路上，方向错了就是南辕北辙",
+          "shock_factor": 10
+        }
+      ]
+    }
+  },
+  
+  "shock_templates": {
+    "financial_impact": [
+      "想象一下，{financial_loss}的真金白银，就这样化为乌有",
+      "这个数字意味着什么？{financial_loss}，可以在北京买{property_equivalent}套房子",
+      "{financial_loss}，够一个普通人工作{years_equivalent}年"
+    ],
+    "time_impact": [
+      "时间是创业者最宝贵的资源，{failure_timeline}的时间成本，永远无法挽回",
+      "在{failure_timeline}的时间里，竞争对手已经占领了市场",
+      "{failure_timeline}，足够让一个行业格局彻底改变"
+    ],
+    "opportunity_cost": [
+      "更可怕的是机会成本：当{company_name}在纠结{core_problem}时，真正的机会窗口正在关闭",
+      "历史不会重演，但总是押着相同的韵脚：{failure_quote}",
+      "这不是个案，是认知陷阱的必然结果"
+    ]
+  },
+  
+  "usage_instructions": {
+    "selection_criteria": [
+      "根据诊断出的认知陷阱类型，选择对应的失败案例",
+      "优先选择shock_factor评分高的案例",
+      "结合用户的行业背景和公司规模选择相似案例"
+    ],
+    "presentation_format": [
+      "先展示基本事实：公司背景、失败时间、损失规模",
+      "再揭示认知陷阱：具体是什么思维误区导致的失败",
+      "最后强化冲击：使用shock_templates中的句式"
+    ]
+  }
+}

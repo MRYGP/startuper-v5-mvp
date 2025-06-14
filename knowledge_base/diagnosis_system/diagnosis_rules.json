@@ -1,183 +1,99 @@
 {
-  "version": "1.1",
-  "description": "认知黑匣子诊断规则库。本文件定义了从用户问题关键词到推荐认知药方的核心匹配逻辑。",
+  "version": "2.0",
+  "description": "认知黑匣子诊断规则库升级版 - 增强情感识别和优先级管理",
+  
+  "global_settings": {
+    "min_confidence_threshold": 0.6,
+    "max_prescriptions_per_diagnosis": 3,
+    "kevin_case_boost_factor": 1.5,
+    "emotional_weight_multiplier": 1.2
+  },
+
   "problem_categories": [
     {
       "category_name": "团队与创始人问题 (Team & Founder)",
-      "category_id": "CAT_TF",
+      "category_id": "CAT_TF", 
+      "priority_score": 10,
       "rules": [
         {
-          "rule_id": "RULE_TF01_KEVIN_CASE",
-          "description": "诊断核心症状：创始人或合伙人之间存在严重冲突。",
+          "rule_id": "RULE_TF01_KEVIN_CASE_ENHANCED",
+          "description": "Kevin案例专用：创始人/合伙人严重冲突诊断",
           "keywords": {
-            "合伙人": 5, "创始人": 5, "冲突": 5, "吵架": 5, "闹掰了": 5, "拆伙": 5, "矛盾": 4, "内耗": 4, "不信任": 4, "分歧": 3, "不合": 3, "搭档": 3, "股东": 3
+            "合伙人": 5, "创始人": 5, "冲突": 5, "吵架": 5,
+            "闹掰了": 5, "拆伙": 5, "分歧": 4, "内耗": 4,
+            "不信任": 4, "决策权": 4, "股权": 3, "退出": 4
+          },
+          "emotional_patterns": {
+            "愤怒情绪": 3, "失望情绪": 3, "困惑情绪": 2,
+            "归因他人": 4, "自我合理化": 3
+          },
+          "context_patterns": {
+            "时间压力": 2, "资金紧张": 2, "外部质疑": 3
           },
           "threshold": 8,
-          "prescription_id": "P20"
-        },
-        {
-          "rule_id": "RULE_TF02_EXECUTION",
-          "description": "诊断核心症状：团队知行不一，执行力低下。",
-          "keywords": {
-            "执行力": 5, "拖延": 5, "做不到": 4, "完不成": 4, "没进展": 3, "计划": 2, "行动不起来": 5
-          },
-          "threshold": 8,
-          "prescription_id": "P14"
-        },
-        {
-          "rule_id": "RULE_TF03_MOTIVATION",
-          "description": "诊断核心症状：创始人或团队失去激情和内在动力。",
-          "keywords": {
-            "没劲": 5, "失去激情": 5, "倦怠": 4, "为了什么": 4, "空虚": 4, "没动力": 5, "意义": 3
-          },
-          "threshold": 9,
-          "prescription_id": "P24"
-        },
-        {
-          "rule_id": "RULE_TF04_COLLABORATION",
-          "description": "诊断核心症状：团队协作不畅，部门墙严重。",
-          "keywords": {
-            "协作": 5, "配合": 4, "内耗": 4, "部门墙": 5, "各自为战": 4, "沟通不畅": 3, "心理安全": 3
-          },
-          "threshold": 8,
-          "prescription_id": "P56"
-        },
-        {
-          "rule_id": "RULE_TF05_FINANCIAL_ILLITERACY",
-          "description": "诊断核心症状：创始人缺乏财务思维，不懂现金流。",
-          "keywords": {
-            "财务": 4, "现金流": 5, "利润": 3, "成本": 3, "烧钱": 4, "单位经济模型": 5, "看不懂报表": 4
-          },
-          "threshold": 8,
-          "prescription_id": "P57"
+          "prescription_id": "P20",
+          "confidence_boost": 0.3,
+          "special_flags": ["kevin_case_solution", "high_priority"]
         }
       ]
     },
     {
-      "category_name": "产品与市场问题 (Product & Market)",
+      "category_name": "产品与市场问题 (Product & Market)", 
       "category_id": "CAT_PM",
+      "priority_score": 9,
       "rules": [
         {
-          "rule_id": "RULE_PM01_TECH_BIAS",
-          "description": "诊断核心症状：技术很强但产品没人用。",
+          "rule_id": "RULE_PM01_TECH_BIAS_ENHANCED",
+          "description": "技术至上偏见增强识别",
           "keywords": {
-            "技术": 3, "用户不买账": 5, "没人用": 5, "功能复杂": 4, "不实用": 4, "留存低": 3
+            "技术": 3, "用户不买账": 5, "没人用": 5,
+            "功能强大": 4, "技术领先": 4, "不实用": 4,
+            "太复杂": 4, "用户不懂": 4
+          },
+          "emotional_patterns": {
+            "技术自豪": 4, "用户困惑": 2, "市场挫败": 3
+          },
+          "user_feedback_patterns": {
+            "复杂难用": 5, "功能过多": 4, "不符预期": 3
           },
           "threshold": 8,
           "prescription_id": "P01"
-        },
-        {
-          "rule_id": "RULE_PM02_NO_PMF",
-          "description": "诊断核心症状：产品与市场不匹配，验证失败。",
-          "keywords": {
-            "没人要": 5, "市场验证": 4, "伪需求": 4, "闭门造车": 4, "PMF": 5, "最小可行产品": 3, "MVP": 3
-          },
-          "threshold": 8,
-          "prescription_id": "P18"
-        },
-        {
-          "rule_id": "RULE_PM03_CHASM",
-          "description": "诊断核心症状：无法从早期用户突破到主流市场。",
-          "keywords": {
-            "鸿沟": 5, "主流市场": 5, "早期用户": 4, "增长停滞": 4, "无法破圈": 4, "实用主义": 3
-          },
-          "threshold": 9,
-          "prescription_id": "P19"
-        },
-        {
-            "rule_id": "RULE_PM04_FEATURE_CREEP",
-            "description": "诊断核心症状：功能堆砌，产品臃肿，核心价值模糊。",
-            "keywords": {
-              "功能太多": 5, "太复杂": 4, "臃肿": 4, "抓不住重点": 4, "什么都想要": 4, "减法": 3
-            },
-            "threshold": 8,
-            "prescription_id": "P04"
-          },
-          {
-            "rule_id": "RULE_PM05_NO_MOAT",
-            "description": "诊断核心症状：产品没粘性，缺乏网络效应和护城河。",
-            "keywords": {
-                "网络效应": 5, "数据飞轮": 5, "护城河": 4, "没粘性": 4, "用户越多越好": 4, "可替代": 3
-            },
-            "threshold": 9,
-            "prescription_id": "P77"
-          }
+        }
       ]
+    }
+  ],
+
+  "diagnosis_algorithm": {
+    "step1_keyword_matching": {
+      "description": "基础关键词权重计算",
+      "weight_formula": "sum(keyword_weight * occurrence_count)"
     },
-    {
-      "category_name": "决策与认知偏差问题 (Decision & Bias)",
-      "category_id": "CAT_DB",
-      "rules": [
-        {
-          "rule_id": "RULE_DB01_CONFIRMATION_BIAS",
-          "description": "诊断核心症状：选择性听取意见，对失败进行合理化解释。",
-          "keywords": {
-            "确认偏误": 5, "听不进": 4, "找借口": 4, "用户不懂": 4, "市场不行": 3, "只看好消息": 4
-          },
-          "threshold": 8,
-          "prescription_id": "P02"
-        },
-        {
-          "rule_id": "RULE_DB02_OVERCONFIDENCE",
-          "description": "诊断核心症状：计划过于乐观，低估风险和难度。",
-          "keywords": {
-            "过度自信": 5, "太乐观": 4, "延期": 3, "肯定能成": 4, "规划谬误": 4, "没问题": 3
-          },
-          "threshold": 8,
-          "prescription_id": "P03"
-        },
-        {
-          "rule_id": "RULE_DB03_SUNK_COST",
-          "description": "诊断核心症状：因为已经投入太多而不敢放弃。",
-          "keywords": {
-            "沉没成本": 5, "舍不得": 4, "已经投了": 4, "骑虎难下": 3, "都走到这一步了": 4, "不甘心": 3
-          },
-          "threshold": 8,
-          "prescription_id": "P06"
-        },
-        {
-            "rule_id": "RULE_DB04_LOSS_AVERSION",
-            "description": "诊断核心症状：害怕损失，过度保守，不敢创新。",
-            "keywords": {
-              "害怕失败": 5, "不敢冒险": 4, "太保守": 4, "维持现状": 4, "损失厌恶": 5, "错失机会": 3
-            },
-            "threshold": 8,
-            "prescription_id": "P08"
-          }
-      ]
+    "step2_emotional_analysis": {
+      "description": "情感模式增强",
+      "weight_formula": "emotional_score * emotional_weight_multiplier"
     },
-    {
-        "category_name": "战略与竞争问题 (Strategy & Competition)",
-        "category_id": "CAT_SC",
-        "rules": [
-          {
-            "rule_id": "RULE_SC01_COMPETITION",
-            "description": "诊断核心症状：陷入红海竞争，只会模仿和打价格战。",
-            "keywords": {
-              "竞争激烈": 4, "红海": 4, "价格战": 5, "同质化": 4, "对标": 3, "垄断": 3
-            },
-            "threshold": 8,
-            "prescription_id": "P42"
-          },
-          {
-            "rule_id": "RULE_SC02_SHORT_TERMISM",
-            "description": "诊断核心症状：追逐短期风口，缺乏长期战略。",
-            "keywords": {
-              "短期主义": 5, "追风口": 5, "战略摇摆": 4, "没耐心": 3, "长期主义": 3, "复利": 2
-            },
-            "threshold": 9,
-            "prescription_id": "P44"
-          },
-          {
-            "rule_id": "RULE_SC03_DISRUPTION",
-            "description": "诊断核心症状：被新技术或新模式降维打击。",
-            "keywords": {
-              "被颠覆": 5, "创新者窘境": 5, "转型失败": 4, "看不懂": 3, "第二曲线": 4, "S曲线": 4
-            },
-            "threshold": 9,
-            "prescription_id": "P17"
-          }
-        ]
+    "step3_context_analysis": {
+      "description": "上下文情境分析", 
+      "factors": ["时间紧迫性", "资源约束", "外部压力"]
+    },
+    "step4_confidence_calculation": {
+      "description": "最终置信度计算",
+      "formula": "(keyword_score + emotional_score + context_score) / max_possible_score"
+    }
+  },
+
+  "quality_assurance": {
+    "kevin_case_test": {
+      "input_sample": "我和我的技术合伙人在产品方向上产生了严重分歧，争论了6个月...",
+      "expected_output": {
+        "primary_rule": "RULE_TF01_KEVIN_CASE_ENHANCED",
+        "confidence": "> 0.9",
+        "prescription": "P20"
       }
-  ]
+    },
+    "false_positive_prevention": {
+      "description": "防止误诊的保护机制",
+      "methods": ["阈值验证", "多规则交叉验证", "人工审核样本"]
+    }
+  }
 }

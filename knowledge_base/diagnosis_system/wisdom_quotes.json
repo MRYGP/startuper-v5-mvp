@@ -1,0 +1,320 @@
+{
+  "version": "1.0",
+  "description": "智慧金句库 - 用于各个环节的权威引言和深度思考",
+  "last_updated": "2025-06-14",
+  
+  "quote_categories": {
+    "认知觉醒": {
+      "category_id": "cognitive_awakening",
+      "description": "关于认知盲区和思维误区的经典洞察",
+      "quotes": [
+        {
+          "quote_id": "awakening_001",
+          "text": "The first principle is that you must not fool yourself — and you are the easiest person to fool.",
+          "chinese_translation": "第一原理是你不能欺骗自己——而你是最容易被欺骗的人。",
+          "author": "Richard Feynman",
+          "author_chinese": "理查德·费曼",
+          "source": "Nobel Prize-winning physicist",
+          "context": "科学方法论",
+          "applicable_scenarios": ["认知偏见", "自我欺骗", "确认偏见"],
+          "impact_score": 10,
+          "usage_frequency": "high"
+        },
+        {
+          "quote_id": "awakening_002", 
+          "text": "It ain't what you don't know that gets you into trouble. It's what you know for sure that just ain't so.",
+          "chinese_translation": "让你陷入麻烦的不是你不知道的事，而是你确信无疑但实际错误的事。",
+          "author": "Mark Twain",
+          "author_chinese": "马克·吐温",
+          "source": "American writer and humorist",
+          "context": "认知陷阱警示",
+          "applicable_scenarios": ["过度自信", "知识盲区", "假设验证"],
+          "impact_score": 9,
+          "usage_frequency": "high"
+        },
+        {
+          "quote_id": "awakening_003",
+          "text": "The greatest enemy of knowledge is not ignorance, it is the illusion of knowledge.",
+          "chinese_translation": "知识最大的敌人不是无知，而是知识的错觉。",
+          "author": "Stephen Hawking",
+          "author_chinese": "史蒂芬·霍金",
+          "source": "Theoretical physicist",
+          "context": "科学认知",
+          "applicable_scenarios": ["知识错觉", "学习陷阱", "专业盲区"],
+          "impact_score": 9,
+          "usage_frequency": "medium"
+        }
+      ]
+    },
+    
+    "团队合作": {
+      "category_id": "teamwork",
+      "description": "关于团队协作、领导力和组织管理的智慧",
+      "quotes": [
+        {
+          "quote_id": "team_001",
+          "text": "If you want to go fast, go alone. If you want to go far, go together.",
+          "chinese_translation": "如果你想走得快，一个人走。如果你想走得远，一起走。",
+          "author": "African Proverb",
+          "author_chinese": "非洲谚语",
+          "source": "Traditional wisdom",
+          "context": "团队价值",
+          "applicable_scenarios": ["团队建设", "合作重要性", "长期发展"],
+          "impact_score": 8,
+          "usage_frequency": "high"
+        },
+        {
+          "quote_id": "team_002",
+          "text": "Great teams are not made up of many well-rounded players. Great teams are made up of players who specialize in what they do best.",
+          "chinese_translation": "伟大的团队不是由许多全能选手组成的，而是由专精于自己最擅长领域的选手组成的。",
+          "author": "Tom Peters",
+          "author_chinese": "汤姆·彼得斯",
+          "source": "Management consultant and author",
+          "context": "团队互补性",
+          "applicable_scenarios": ["人才配置", "专业分工", "团队优化"],
+          "impact_score": 8,
+          "usage_frequency": "medium"
+        },
+        {
+          "quote_id": "team_003",
+          "text": "The strength of the team is each individual member. The strength of each member is the team.",
+          "chinese_translation": "团队的力量在于每个成员，每个成员的力量在于团队。",
+          "author": "Phil Jackson",
+          "author_chinese": "菲尔·杰克逊",
+          "source": "NBA championship coach",
+          "context": "团队协同",
+          "applicable_scenarios": ["团队精神", "个人与集体", "协同效应"],
+          "impact_score": 7,
+          "usage_frequency": "medium"
+        }
+      ]
+    },
+    
+    "创新与技术": {
+      "category_id": "innovation_tech",
+      "description": "关于技术创新、产品开发和技术思维的洞察",
+      "quotes": [
+        {
+          "quote_id": "tech_001",
+          "text": "Technology is nothing. What's important is that you have a faith in people, that they're basically good and smart, and if you give them tools, they'll do wonderful things with them.",
+          "chinese_translation": "技术不算什么。重要的是你要相信人们本质上是善良和聪明的，如果你给他们工具，他们会用这些工具做出精彩的事情。",
+          "author": "Steve Jobs",
+          "author_chinese": "史蒂夫·乔布斯",
+          "source": "Apple co-founder",
+          "context": "技术的人本价值",
+          "applicable_scenarios": ["技术至上偏见", "用户中心设计", "产品哲学"],
+          "impact_score": 10,
+          "usage_frequency": "high"
+        },
+        {
+          "quote_id": "tech_002",
+          "text": "Innovation distinguishes between a leader and a follower.",
+          "chinese_translation": "创新区分了领导者和跟随者。",
+          "author": "Steve Jobs", 
+          "author_chinese": "史蒂夫·乔布斯",
+          "source": "Apple co-founder",
+          "context": "创新重要性",
+          "applicable_scenarios": ["创新思维", "差异化竞争", "领导力"],
+          "impact_score": 8,
+          "usage_frequency": "high"
+        },
+        {
+          "quote_id": "tech_003",
+          "text": "The best way to predict the future is to invent it.",
+          "chinese_translation": "预测未来的最好方法就是创造未来。",
+          "author": "Alan Kay",
+          "author_chinese": "艾伦·凯",
+          "source": "Computer scientist",
+          "context": "主动创新",
+          "applicable_scenarios": ["创新者思维", "主动出击", "未来规划"],
+          "impact_score": 9,
+          "usage_frequency": "medium"
+        }
+      ]
+    },
+    
+    "商业智慧": {
+      "category_id": "business_wisdom",
+      "description": "关于商业策略、市场洞察和企业经营的经典智慧",
+      "quotes": [
+        {
+          "quote_id": "business_001",
+          "text": "Your customer doesn't care how much you know until they know how much you care.",
+          "chinese_translation": "客户不在乎你知道多少，直到他们知道你有多在乎他们。",
+          "author": "Damon Richards",
+          "author_chinese": "达蒙·理查兹",
+          "source": "Business consultant",
+          "context": "客户关系",
+          "applicable_scenarios": ["客户导向", "用户体验", "服务意识"],
+          "impact_score": 8,
+          "usage_frequency": "high"
+        },
+        {
+          "quote_id": "business_002",
+          "text": "Build something 100 people love, not something 1 million people kind of like.",
+          "chinese_translation": "构建100个人热爱的东西，而不是100万人有点喜欢的东西。",
+          "author": "Brian Chesky",
+          "author_chinese": "布莱恩·切斯基",
+          "source": "Airbnb co-founder",
+          "context": "产品专注",
+          "applicable_scenarios": ["产品定位", "用户画像", "市场细分"],
+          "impact_score": 9,
+          "usage_frequency": "high"
+        },
+        {
+          "quote_id": "business_003",
+          "text": "The biggest risk is not taking any risk... In a world that's changing quickly, the only strategy that is guaranteed to fail is not taking risks.",
+          "chinese_translation": "最大的风险就是不承担任何风险...在一个快速变化的世界里，唯一注定失败的策略就是不承担风险。",
+          "author": "Mark Zuckerberg",
+          "author_chinese": "马克·扎克伯格",
+          "source": "Facebook founder",
+          "context": "风险管理",
+          "applicable_scenarios": ["风险决策", "创新勇气", "变化适应"],
+          "impact_score": 8,
+          "usage_frequency": "medium"
+        }
+      ]
+    },
+    
+    "学习与成长": {
+      "category_id": "learning_growth",
+      "description": "关于学习方法、个人成长和持续改进的智慧",
+      "quotes": [
+        {
+          "quote_id": "learning_001",
+          "text": "Live as if you were to die tomorrow. Learn as if you were to live forever.",
+          "chinese_translation": "像明天就要死去那样生活，像永远都会活着那样学习。",
+          "author": "Mahatma Gandhi",
+          "author_chinese": "圣雄甘地",
+          "source": "Indian independence leader",
+          "context": "终身学习",
+          "applicable_scenarios": ["学习态度", "成长心态", "知识追求"],
+          "impact_score": 9,
+          "usage_frequency": "medium"
+        },
+        {
+          "quote_id": "learning_002",
+          "text": "The more that you read, the more things you will know. The more that you learn, the more places you'll go.",
+          "chinese_translation": "读得越多，知道的就越多。学得越多，去的地方就越多。",
+          "author": "Dr. Seuss",
+          "author_chinese": "苏斯博士",
+          "source": "Children's book author",
+          "context": "学习价值",
+          "applicable_scenarios": ["知识积累", "视野拓展", "能力提升"],
+          "impact_score": 7,
+          "usage_frequency": "low"
+        }
+      ]
+    },
+    
+    "决策与判断": {
+      "category_id": "decision_making",
+      "description": "关于决策方法、判断力和理性思维的洞察",
+      "quotes": [
+        {
+          "quote_id": "decision_001",
+          "text": "In any moment of decision, the best thing you can do is the right thing, the next best thing is the wrong thing, and the worst thing you can do is nothing.",
+          "chinese_translation": "在任何决策时刻，你能做的最好的事就是正确的事，次好的是错误的事，而最糟糕的是什么都不做。",
+          "author": "Theodore Roosevelt",
+          "author_chinese": "西奥多·罗斯福",
+          "source": "26th President of the United States",
+          "context": "决策行动",
+          "applicable_scenarios": ["决策勇气", "行动力", "机会把握"],
+          "impact_score": 8,
+          "usage_frequency": "medium"
+        },
+        {
+          "quote_id": "decision_002",
+          "text": "It is not the strongest of the species that survives, nor the most intelligent, but the one most responsive to change.",
+          "chinese_translation": "能够生存下来的物种，不是最强壮的，也不是最聪明的，而是最能适应变化的。",
+          "author": "Charles Darwin",
+          "author_chinese": "查尔斯·达尔文",
+          "source": "Naturalist and biologist",
+          "context": "适应能力",
+          "applicable_scenarios": ["变化应对", "灵活性", "进化思维"],
+          "impact_score": 9,
+          "usage_frequency": "high"
+        }
+      ]
+    }
+  },
+  
+  "contextual_quotes": {
+    "opening_quotes": [
+      {
+        "text": "The unexamined life is not worth living.",
+        "chinese_translation": "未经审视的人生不值得过。",
+        "author": "Socrates",
+        "usage": "开场时引发思考"
+      },
+      {
+        "text": "Question everything. Learn something. Answer nothing.",
+        "chinese_translation": "质疑一切，学习一些，不回答任何事。",
+        "author": "Euripides",
+        "usage": "苏格拉底式教学开场"
+      }
+    ],
+    
+    "closing_quotes": [
+      {
+        "text": "The only true wisdom is in knowing you know nothing.",
+        "chinese_translation": "唯一真正的智慧是知道你什么都不知道。",
+        "author": "Socrates",
+        "usage": "认知觉醒后的谦逊提醒"
+      },
+      {
+        "text": "We cannot solve our problems with the same thinking we used when we created them.",
+        "chinese_translation": "我们无法用创造问题时的思维来解决问题。",
+        "author": "Albert Einstein",
+        "usage": "认知重构完成时的总结"
+      }
+    ],
+    
+    "transition_quotes": [
+      {
+        "text": "The first step toward change is awareness. The second step is acceptance.",
+        "chinese_translation": "改变的第一步是意识，第二步是接受。",
+        "author": "Nathaniel Branden",
+        "usage": "从诊断到教学的过渡"
+      }
+    ]
+  },
+  
+  "random_selection_pools": {
+    "high_impact": {
+      "description": "高冲击力金句，用于关键时刻",
+      "quote_ids": ["awakening_001", "awakening_002", "tech_001", "business_002", "decision_002"],
+      "usage_frequency": "high"
+    },
+    "inspirational": {
+      "description": "激励性金句，用于鼓舞士气",
+      "quote_ids": ["tech_002", "tech_003", "business_003", "decision_001"],
+      "usage_frequency": "medium"
+    },
+    "reflective": {
+      "description": "反思性金句，用于深度思考",
+      "quote_ids": ["awakening_003", "learning_001", "team_003"],
+      "usage_frequency": "medium"
+    }
+  },
+  
+  "usage_instructions": {
+    "selection_criteria": [
+      "根据用户诊断出的认知陷阱类型选择相关类别的金句",
+      "开场使用opening_quotes，结尾使用closing_quotes",
+      "高冲击时刻优先使用high_impact池中的金句",
+      "考虑金句的impact_score和usage_frequency"
+    ],
+    "presentation_format": [
+      "先展示英文原文，增加权威感",
+      "再提供中文翻译，确保理解",
+      "注明作者和身份，增加可信度",
+      "适当解释金句在当前情境下的含义"
+    ],
+    "frequency_control": [
+      "同一个金句在单次会话中最多使用一次",
+      "high频率金句优先选择，但要避免过度重复",
+      "根据用户反馈调整金句的使用频率"
+    ]
+  }
+}

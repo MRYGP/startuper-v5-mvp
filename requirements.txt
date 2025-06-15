@@ -1,15 +1,89 @@
-# 认知黑匣子 - Python依赖包
+# 🧠 认知黑匣子 - 15分钟觉醒之旅依赖清单
+
+# 核心框架
 streamlit>=1.28.0
-google-generativeai>=0.3.0
 pandas>=2.0.0
-Markdown>=3.5.0
-PyYAML>=6.0.1
+
+# AI和API
+google-generativeai>=0.3.0
 requests>=2.31.0
+
+# 数据处理
+PyYAML>=6.0.1
 python-dotenv>=1.0.0
+Markdown>=3.5.0
+
+# 可视化（15分钟流程专用）
 plotly>=5.17.0
 altair>=5.1.0
-streamlit-chat>=0.1.1
-streamlit-option-menu>=0.3.6
-streamlit-aggrid>=0.3.4
-jsonschema>=4.19.0
-typing-extensions>=4.8.0
+
+# Mermaid图表支持（可选，失败不影响系统运行）
+streamlit-mermaid>=0.1.0
+
+# 开发和测试
+pytest>=7.0.0
+black>=23.0.0
+flake8>=6.0.0
+
+# 性能优化
+cachetools>=5.3.0
+asyncio>=3.4.3
+
+# 部署相关
+gunicorn>=21.2.0
+uvicorn>=0.23.0
+
+# 日志和监控
+loguru>=0.7.0
+
+# 安全性
+cryptography>=41.0.0
+
+# 数据验证
+pydantic>=2.0.0
+
+# 时间处理
+python-dateutil>=2.8.2
+
+# 文件处理
+pathlib2>=2.3.7
+chardet>=5.2.0
+
+# 网络请求增强
+urllib3>=2.0.0
+httpx>=0.24.0
+
+# JSON处理增强
+orjson>=3.9.0
+
+# 字符串处理
+regex>=2023.8.8
+
+# 系统工具
+psutil>=5.9.0
+
+# 错误追踪（可选）
+sentry-sdk>=1.32.0
+
+# 进度条
+tqdm>=4.66.0
+
+# 配置管理
+dynaconf>=3.2.0
+
+# 缓存
+redis>=4.6.0
+
+# 数据库（如果需要）
+sqlite3>=3.42.0
+
+# API文档（开发用）
+fastapi>=0.103.0
+uvicorn[standard]>=0.23.0
+
+# 代码质量
+pre-commit>=3.4.0
+mypy>=1.5.0
+
+# 环境管理
+python-decouple>=3.8

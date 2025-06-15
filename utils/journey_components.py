@@ -680,8 +680,16 @@ def render_mentor_stage(orchestrator):
                 st.rerun()
 
 def render_assistant_stage(orchestrator):
-    """阶段5：助理温暖内化"""
+    """阶段5：助理温暖内化 - 修复反馈提交后的状态管理BUG"""
     render_ai_role_header("助理", 4, "温暖总结，价值固化", "#17a2b8")
+    
+    # 检查是否已经提交反馈（新增状态检查）
+    feedback_submitted = st.session_state.get("feedback_submitted", False)
+    
+    if feedback_submitted:
+        # 如果已提交反馈，显示完成页面
+        render_journey_completion()
+        return
     
     # 第一步：掌握测试
     st.markdown("## 🧪 第一步：掌握验证")

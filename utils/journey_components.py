@@ -761,84 +761,21 @@ def render_assistant_stage(orchestrator):
                         render_feedback_collection(orchestrator)
 
 def render_final_weapon_card(weapon_card, name, reminder, scenarios):
-    """渲染最终武器卡片"""
-    card_content = weapon_card.get("weapon_card", {}).get("content", {})
-    sections = card_content.get("sections", [])
+    """简化版武器卡片"""
+    st.success(f"🛡️ {name}")
+    st.info(f"❤️‍🩹 血泪提醒: {reminder}")
+    st.info(f"💡 使用场景: {scenarios}")
     
-    # 从sections中提取信息
-    target_trap = sections[0].get("content", "认知陷阱") if len(sections) > 0 else "认知陷阱"
-    core_principle = sections[1].get("content", "认知重构原理") if len(sections) > 1 else "认知重构原理"
-    
-    weapon_html = f'''
-    <div class="weapon-card">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h1 style="margin: 0; font-size: 2.2rem;">🛡️ {name}</h1>
-            <p style="margin: 0.5rem 0; opacity: 0.9; font-size: 1.1rem;">我的专属认知武器</p>
-        </div>
-        
-        <div style="background: rgba(255,255,255,0.15); padding: 2rem; border-radius: 15px; margin: 1rem 0;">
-            <div style="margin-bottom: 1.5rem;">
-                <h3 style="margin-top: 0; display: flex; align-items: center;">
-                    <span style="margin-right: 0.5rem;">🎯</span> 专治病症
-                </h3>
-                <p style="margin-left: 2rem;">{target_trap}</p>
-            </div>
-            
-            <div style="margin-bottom: 1.5rem;">
-                <h3 style="display: flex; align-items: center;">
-                    <span style="margin-right: 0.5rem;">⚡</span> 核心原理
-                </h3>
-                <p style="margin-left: 2rem;">{core_principle}</p>
-            </div>
-            
-            <div style="margin-bottom: 1.5rem;">
-                <h3 style="display: flex; align-items: center;">
-                    <span style="margin-right: 0.5rem;">❤️‍🩹</span> 我的血泪提醒
-                </h3>
-                <p style="margin-left: 2rem; font-weight: bold; color: #ffd700; font-size: 1.1rem;">"{reminder}"</p>
-            </div>
-            
-            <div style="margin-bottom: 1.5rem;">
-                <h3 style="display: flex; align-items: center;">
-                    <span style="margin-right: 0.5rem;">💡</span> 使用场景
-                </h3>
-                <p style="margin-left: 2rem;">{scenarios}</p>
-            </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 2rem; opacity: 0.8;">
-            <small>🧠 认知黑匣子 • 15分钟认知觉醒之旅 • {datetime.now().strftime("%Y-%m-%d")}</small>
-        </div>
-    </div>
-    '''
-    st.markdown(weapon_html, unsafe_allow_html=True)
-    
-    # 保存功能
+    # 保存功能（简化版）
     col1, col2, col3 = st.columns(3)
-    
     with col1:
         if st.button("💾 保存为图片", use_container_width=True, key="save_image"):
             st.success("🎉 武器卡片已生成！请截图保存。")
-    
     with col2:
         if st.button("📋 复制内容", use_container_width=True, key="copy_content"):
-            card_text = f"""
-🛡️ {name}
-
-🎯 专治病症: {target_trap}
-⚡ 核心原理: {core_principle}  
-❤️‍🩹 血泪提醒: "{reminder}"
-💡 使用场景: {scenarios}
-            """
             st.success("📋 内容已准备好复制")
-            st.code(card_text)
-    
     with col3:
         if st.button("🔄 重新定制", use_container_width=True, key="redesign"):
-            # 清除相关状态，返回定制阶段
-            for key in ["weapon_name", "personal_reminder", "usage_scenarios"]:
-                if key in st.session_state:
-                    del st.session_state[key]
             st.rerun()
 
 def render_feedback_collection(orchestrator):

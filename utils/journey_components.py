@@ -46,7 +46,11 @@ def render_15min_journey():
     
     # 根据阶段渲染对应界面
     try:
-        if stage == 0:
+        # 检查是否已完成流程（优先检查）
+        feedback_submitted = st.session_state.get("feedback_submitted", False)
+        if feedback_submitted:
+            render_journey_completion()
+        elif stage == 0:
             render_opening_stage(orchestrator)
         elif stage == 1:
             render_demo_input_stage(orchestrator)

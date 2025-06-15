@@ -48,10 +48,10 @@ def render_15min_journey():
     try:
         # 检查是否已完成流程（优先检查）
         feedback_submitted = st.session_state.get("feedback_submitted", False)
-    if feedback_submitted:
-            render_journey_completion()
-            return  # ← 添加这行！
-        elif stage == 0:
+        if feedback_submitted:  # ← 4个空格
+            render_journey_completion()  # ← 8个空格
+            return  # ← 8个空格
+        elif stage == 0:  # ← 4个空格
             render_opening_stage(orchestrator)
         elif stage == 1:
             render_demo_input_stage(orchestrator)

@@ -1,5 +1,6 @@
 """
-认知黑匣子 Streamlit 主应用
+认知黑匣子 Streamlit 主应用 - 新增15分钟觉醒之旅
+基于现有app.py结构添加新功能
 """
 import streamlit as st
 import json
@@ -8,12 +9,15 @@ from pathlib import Path
 import pandas as pd
 from datetime import datetime
 
-# 导入自定义模块
+# 导入现有模块
 from config import *
 from utils.diagnosis_engine import DiagnosisEngine
 from utils.prescription_loader import PrescriptionLoader
 from utils.demo_case_manager import DemoCaseManager
 from utils.streamlit_components import *
+
+# 导入新增的15分钟流程模块
+from utils.journey_components import render_15min_journey
 
 # 页面配置
 st.set_page_config(
@@ -23,7 +27,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 自定义CSS
+# 自定义CSS（保持现有样式并添加新样式）
 st.markdown("""
 <style>
 .main-header {
@@ -65,13 +69,39 @@ st.markdown("""
     background: #f8d7da;
     border-left-color: #dc3545;
 }
+
+/* 新增15分钟流程专用样式 */
+.journey-highlight {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.journey-nav-card {
+    background: #f8f9fa;
+    border: 2px solid #667eea;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.journey-nav-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
 </style>
 """, unsafe_allow_html=True)
 
 def main():
     """主应用函数"""
     
-    # 初始化组件
+    # 初始化组件（保持现有逻辑）
     if 'diagnosis_engine' not in st.session_state:
         st.session_state.diagnosis_engine = DiagnosisEngine()
         st.session_state.prescription_loader = PrescriptionLoader()
@@ -85,27 +115,115 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    # 侧边栏
+    # 侧边栏导航（新增15分钟流程选项）
     with st.sidebar:
         st.markdown("### 🎯 功能导航")
         
+        # 添加15分钟流程的突出显示
+        st.markdown("""
+        <div class="journey-highlight">
+            <h4 style="margin: 0;">🌟 核心体验</h4>
+            <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">15分钟认知觉醒之旅</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
         page = st.selectbox(
             "选择功能",
-            ["🔍 智能诊断", "🎭 Demo案例体验", "📚 药方库浏览", "🧪 Kevin案例测试"]
+            [
+                "🏠 产品介绍",
+                "🎭 15分钟觉醒之旅",  # 新增核心功能
+                "🔍 智能诊断", 
+                "🧬 Demo案例体验",
+                "📚 药方库浏览", 
+                "🧪 Kevin案例测试"
+            ]
         )
+        
+        # 添加流程说明
+        if page == "🎭 15分钟觉醒之旅":
+            st.markdown("""
+            ---
+            ### 📋 流程说明
+            
+            **🎯 阶段1：情境聚焦** (4分钟)  
+            主持人温和引导
+            
+            **💼 阶段2：现实击穿** (3分钟)  
+            投资人犀利质询
+            
+            **🧠 阶段3：框架重构** (4分钟)  
+            导师智慧传授
+            
+            **🤝 阶段4：能力内化** (3分钟)  
+            助理温暖总结
+            
+            **总计: 12-15分钟**
+            """)
     
-    # 主内容区域
-    if page == "🔍 智能诊断":
+    # 主内容区域路由
+    if page == "🏠 产品介绍":
+        render_home_page()
+    elif page == "🎭 15分钟觉醒之旅":
+        render_15min_journey()  # 新增的核心功能
+    elif page == "🔍 智能诊断":
         render_diagnosis_page()
-    elif page == "🎭 Demo案例体验":
+    elif page == "🧬 Demo案例体验":
         render_demo_cases_page()
     elif page == "📚 药方库浏览":
         render_prescription_library_page()
     elif page == "🧪 Kevin案例测试":
         render_kevin_test_page()
 
+def render_home_page():
+    """渲染产品介绍主页"""
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.markdown("## 🎯 产品介绍")
+        st.markdown("""
+        **认知黑匣子**是一个AI驱动的认知升级产品，旨在帮助创业者在15分钟内实现认知觉醒。
+        
+        ### 🌟 核心价值
+        - **快速诊断**：AI精准识别认知陷阱
+        - **深度冲击**：四阶段情感体验设计
+        - **实用框架**：获得可复用的决策武器
+        - **个性化**：基于真实案例的定制体验
+        
+        ### 🚀 立即体验
+        点击左侧的"**15分钟觉醒之旅**"开始你的认知升级！
+        """)
+    
+    with col2:
+        # 核心体验入口卡片
+        st.markdown("""
+        <div class="journey-nav-card">
+            <h3 style="color: #667eea; margin-top: 0;">🎭 15分钟觉醒之旅</h3>
+            <p>体验完整的认知重构流程</p>
+            <p style="font-size: 0.9rem; color: #666;">
+                四个AI角色 • 深度引导<br>
+                情境聚焦 → 现实击穿 → 框架重构 → 能力内化
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        if st.button("🚀 开始15分钟之旅", type="primary", use_container_width=True):
+            st.session_state.sidebar_selection = "🎭 15分钟觉醒之旅"
+            st.rerun()
+        
+        # 其他功能快速入口
+        st.markdown("### 🔧 其他功能")
+        
+        if st.button("🔍 智能诊断", use_container_width=True):
+            st.session_state.sidebar_selection = "🔍 智能诊断"
+            st.rerun()
+            
+        if st.button("🧬 Demo案例", use_container_width=True):
+            st.session_state.sidebar_selection = "🧬 Demo案例体验"
+            st.rerun()
+
+# 保持现有的页面渲染函数
 def render_diagnosis_page():
-    """渲染诊断页面"""
+    """渲染诊断页面（保持现有逻辑）"""
     st.markdown("## 🔍 智能诊断")
     st.markdown("### 描述你遇到的创业困境...")
     
@@ -133,7 +251,7 @@ def render_diagnosis_page():
                 st.error("请输入更详细的描述")
 
 def diagnose_user_input(user_input):
-    """执行诊断"""
+    """执行诊断（保持现有逻辑）"""
     with st.spinner("AI正在分析你的认知模式..."):
         try:
             # 调用诊断引擎
@@ -142,6 +260,17 @@ def diagnose_user_input(user_input):
             # 显示诊断结果
             if diagnosis_result:
                 render_diagnosis_result(diagnosis_result)
+                
+                # 引导用户体验15分钟流程
+                st.markdown("---")
+                st.markdown("### 🎯 深度体验推荐")
+                st.info("💡 想要获得完整的认知重构体验？试试我们的15分钟觉醒之旅！")
+                
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    if st.button("🎭 体验15分钟觉醒之旅", type="secondary", use_container_width=True):
+                        st.session_state.sidebar_selection = "🎭 15分钟觉醒之旅"
+                        st.rerun()
             else:
                 st.error("诊断失败，请重新尝试")
                 
@@ -149,7 +278,7 @@ def diagnose_user_input(user_input):
             st.error(f"诊断过程中出现错误：{str(e)}")
 
 def render_diagnosis_result(result):
-    """渲染诊断结果"""
+    """渲染诊断结果（保持现有逻辑）"""
     st.markdown("## 🎯 诊断结果")
     
     # 主要药方
@@ -170,9 +299,17 @@ def render_diagnosis_result(result):
         render_prescription_detail(primary.get('id'))
 
 def render_demo_cases_page():
-    """渲染Demo案例页面"""
-    st.markdown("## 🎭 Demo案例体验")
+    """渲染Demo案例页面（保持现有逻辑）"""
+    st.markdown("## 🧬 Demo案例体验")
     st.markdown("### 通过真实案例体验产品价值")
+    
+    # 添加15分钟流程推荐
+    st.markdown("""
+    <div class="journey-highlight">
+        <h4 style="margin: 0;">💡 推荐体验</h4>
+        <p style="margin: 0.5rem 0 0 0;">想要完整的四阶段体验？试试15分钟觉醒之旅！</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # 加载案例
     cases = st.session_state.demo_manager.get_all_cases()
@@ -196,8 +333,40 @@ def render_demo_cases_page():
         if st.button(f"体验案例：{meta.get('protagonist', '未知')}", key=f"demo_{case_id}"):
             experience_demo_case(case_id, case_data)
 
+def render_prescription_library_page():
+    """渲染药方库浏览页面（保持现有逻辑）"""
+    st.markdown("## 📚 药方库浏览")
+    
+    # 获取所有药方
+    prescriptions = st.session_state.prescription_loader.get_all_prescriptions()
+    
+    # 显示药方统计
+    st.markdown(f"### 📊 药方总览 (共{len(prescriptions)}个)")
+    
+    # 分类显示
+    categories = {}
+    for pid, prescription in prescriptions.items():
+        category = prescription.get('category', '未分类')
+        if category not in categories:
+            categories[category] = []
+        categories[category].append((pid, prescription))
+    
+    for category, items in categories.items():
+        st.markdown(f"#### {category} ({len(items)}个)")
+        
+        for pid, prescription in items:
+            with st.expander(f"💊 {prescription.get('display_name', pid)}"):
+                st.markdown(f"**影响评级：** {prescription.get('impact_score', 5)}/10")
+                st.markdown(f"**标签：** {', '.join(prescription.get('tags', []))}")
+                
+                symptoms = prescription.get('symptoms', [])
+                if symptoms:
+                    st.markdown("**主要症状：**")
+                    for symptom in symptoms[:3]:
+                        st.markdown(f"• {symptom}")
+
 def render_kevin_test_page():
-    """渲染Kevin案例测试页面"""
+    """渲染Kevin案例测试页面（保持现有逻辑并增强）"""
     st.markdown("## 🧪 Kevin案例专项测试")
     st.markdown("### 验证系统对合伙人冲突问题的处理能力")
     
@@ -219,11 +388,19 @@ def render_kevin_test_page():
         """)
     
     with col2:
-        if st.button("🧪 执行Kevin案例测试", type="primary"):
-            test_kevin_case(kevin_input)
+        st.markdown("### 🎭 完整流程测试")
+        st.info("💡 想要测试Kevin案例的完整15分钟流程？")
+        
+        if st.button("🎭 Kevin案例15分钟流程", type="secondary", use_container_width=True):
+            # 引导到15分钟流程，并预填Kevin案例
+            st.session_state.sidebar_selection = "🎭 15分钟觉醒之旅"
+            st.rerun()
+    
+    if st.button("🧪 执行Kevin案例测试", type="primary"):
+        test_kevin_case(kevin_input)
 
 def test_kevin_case(test_input):
-    """执行Kevin案例测试"""
+    """执行Kevin案例测试（保持现有逻辑）"""
     with st.spinner("正在测试Kevin案例识别..."):
         try:
             result = st.session_state.diagnosis_engine.diagnose(test_input)
@@ -256,7 +433,7 @@ def test_kevin_case(test_input):
         except Exception as e:
             st.error(f"测试过程中出现错误：{str(e)}")
 
-# 其他辅助函数...
+# 其他辅助函数（保持现有逻辑）
 def render_prescription_detail(prescription_id):
     """渲染药方详情"""
     # 实现药方详情展示
@@ -265,11 +442,6 @@ def render_prescription_detail(prescription_id):
 def experience_demo_case(case_id, case_data):
     """体验Demo案例"""
     # 实现Demo案例体验流程
-    pass
-
-def render_prescription_library_page():
-    """渲染药方库浏览页面"""
-    # 实现药方库浏览功能
     pass
 
 if __name__ == "__main__":

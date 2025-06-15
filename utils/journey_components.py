@@ -787,7 +787,7 @@ def render_final_weapon_card(weapon_card, name, reminder, scenarios):
             st.rerun()
 
 def render_feedback_collection(orchestrator):
-    """渲染反馈收集"""
+    """渲染反馈收集 - 修复状态管理BUG"""
     st.markdown("---")
     st.markdown("### 💬 分享你的体验感受")
     
@@ -806,22 +806,80 @@ def render_feedback_collection(orchestrator):
         )
     
     if st.button("📝 提交反馈", type="primary", key="submit_feedback"):    
-        st.success("🙏 感谢你的宝贵反馈！")          
-        st.success("🎉 15分钟认知觉醒之旅已完成！")         
-        
-        # 显示结束选项，而不是自动跳转        
-        st.markdown("---")        
-        col1, col2 = st.columns(2)        
-        with col1:
-            if st.button("🔄 重新体验", use_container_width=True, key="restart_journey"):    
-                # 清空所有状态并重新开始         
-                orchestrator.reset_journey()        
-                for key in ["mastery_passed", "user_responses"]:        
-                    if key in st.session_state:        
-                        del st.session_state[key]        
-                st.rerun()
-        
-        with col2:
-            if st.button("🏠 返回首页", use_container_width=True, key="go_home"):    
-                st.session_state.current_page = "🏠 产品介绍"        
-                st.rerun()        
+        # 关键修复：设置反馈已提交标记
+        st.session_state["feedback_submitted"] = True
+        st.rerun()  # 重新渲染页面，将显示完成页面
+def render_journey_completion():
+    """渲染流程完成页面 - 新增函数"""
+    st.markdown("### 🎉 感谢您的宝贵反馈！")
+    st.success("✨ 15分钟认知觉醒之旅已圆满完成！")
+    
+    # 显示完成统计信息
+    completion_html = '''
+    <div style="
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        margin: 2rem 0;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    ">
+        <h2>🏆 旅程完成</h2>
+        <p style="font-size: 1.2rem; margin: 1rem 0;">
+            您已经成功获得了专属的认知武器！<br>
+            现在可以选择开始新的旅程或返回主页。
+        </p>
+    </div>
+    '''
+    st.markdown(completion_html, unsafe_allow_html=True)
+    
+    # 显示结束选项
+    st.markdown("### 🚀 接下来做什么？")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("🔄 重新体验", use_container_width=True, key="restart_journey_final"):
+            # 清空所有状态并重新开始
+            keys_to_clear = [
+                "journey", "user_responses", "mastery_passed", 
+                "feedback_submitted", "weapon_name", "personal_reminder", 
+                "usage_scenarios", "satisfaction", "recommend", "most_valuable"
+            ]
+            for key in keys_to_clear:
+                if key in st.session_state:
+                    del st.session_state[key]
+            st.rerun()
+    
+    with col2:
+        if st.button("🏠 返回首页", use_container_width=True, key="go_home_final"):
+            st.session_state.current_page = "🏠 产品介绍"
+            # 保留反馈已提交状态，但清理其他临时状态
+            keys_to_clear = [
+                "mastery_passed", "weapon_name", "personal_reminder", 
+                "usage_scenarios", "satisfaction", "recommend", "most_valuable"
+            ]
+            for key in keys_to_clear:
+                if key in st.session_state:
+                    del st.session_state[key]
+            st.rerun()
+    
+    # 额外的功能选项
+    st.markdown("---")
+    st.markdown("### 🔧 更多选项")
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("🔍 体验智能诊断", use_container_width=True):
+            st.session_state.current_page = "🔍 智能诊断"
+            st.rerun()
+    
+    with col2:
+        if st.button("🧬 查看其他案例", use_container_width=True):
+            st.session_state.current_page = "🧬 Demo案例体验"
+            st.rerun()
+    
+    with col3:
+        if st.button("📚 浏览药方库", use_container_width=True):
+            st.session_state.current_page = "📚 药方库浏览"
+            st.rerun()

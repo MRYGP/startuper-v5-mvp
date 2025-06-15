@@ -797,7 +797,7 @@ def render_feedback_collection(orchestrator):
             key="most_valuable"
         )
     
-    if st.button("📝 提交反馈", type="primary", key="submit_feedback"):
+        if st.button("📝 提交反馈", type="primary", key="submit_feedback"):
     st.success("🙏 感谢你的宝贵反馈！")
     st.success("🎉 15分钟认知觉醒之旅已完成！")
     

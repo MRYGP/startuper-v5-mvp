@@ -816,7 +816,7 @@ def render_feedback_collection(orchestrator):
     # 关键修复：设置反馈已提交标记
     st.session_state["feedback_submitted"] = True
     st.success("✅ 反馈已提交！状态已设置！")  # 调试信息
-    st.write(f"🔍 调试：feedback_submitted = {st.session_state.get('feedback_submitted')}")  # 调试信息
+    st.write(f"🔍 调试: feedback_submitted = {st.session_state.get('feedback_submitted')}")  # 4个空格
     st.rerun()  # 重新渲染页面，将显示完成页面
 def render_journey_completion():
     """渲染流程完成页面 - 新增函数"""

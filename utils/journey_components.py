@@ -174,36 +174,16 @@ def apply_journey_css():
     """, unsafe_allow_html=True)
 
 def render_progress_indicator(current_stage):
-    """渲染进度指示器 - 修复HTML渲染"""
-    stages = [
-        {"name": "🎭 开场", "emoji": "🎭"},
-        {"name": "📝 情境", "emoji": "📝"},
-        {"name": "🔍 诊断", "emoji": "🔍"},
-        {"name": "💼 质询", "emoji": "💼"},
-        {"name": "🧠 重构", "emoji": "🧠"},
-        {"name": "🤝 内化", "emoji": "🤝"}
-    ]
-    
-    progress_html = '<div class="journey-progress">'
-    
-    for i, stage_info in enumerate(stages):
-        if i < current_stage:
-            css_class = "journey-stage completed"
-        elif i == current_stage:
-            css_class = "journey-stage current"
-        else:
-            css_class = "journey-stage"
-            
-        progress_html += f'''
-        <div class="{css_class}">
-            <div>{stage_info["emoji"]}</div>
-            <div style="font-size: 0.8rem; margin-top: 0.2rem;">{stage_info["name"]}</div>
+    """简化测试版本"""
+    simple_html = '''
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px;">
+        <div style="display: flex; justify-content: space-between;">
+            <span style="background: #28a745; color: white; padding: 0.5rem; border-radius: 20px;">🎭 开场</span>
+            <span style="background: #007bff; color: white; padding: 0.5rem; border-radius: 20px;">📝 情境</span>
         </div>
-        '''
-    
-    progress_html += '</div>'
-    # 修复：添加 unsafe_allow_html=True
-    st.markdown(progress_html, unsafe_allow_html=True)
+    </div>
+    '''
+    st.markdown(simple_html, unsafe_allow_html=True)
 
 def render_ai_role_header(role_name, stage_num, description, color):
     """渲染AI角色头部 - 修复HTML渲染"""

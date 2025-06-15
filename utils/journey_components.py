@@ -827,11 +827,6 @@ def render_feedback_collection(orchestrator):
         # 彻底修复：设置反馈已提交标记，清除可能冲突的状态
         st.session_state["feedback_submitted"] = True
         
-        # 清除可能导致冲突的状态
-        conflicting_keys = ["weapon_name", "personal_reminder", "usage_scenarios"]
-        for key in conflicting_keys:
-            if key in st.session_state:
-                del st.session_state[key]
         
         st.success("✅ 反馈已提交！正在跳转到完成页面...")
         st.rerun()

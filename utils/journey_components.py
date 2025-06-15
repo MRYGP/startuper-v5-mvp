@@ -775,25 +775,37 @@ def render_assistant_stage(orchestrator):
                         render_feedback_collection(orchestrator)
 
 def render_final_weapon_card(weapon_card, name, reminder, scenarios):
-    """简化版武器卡片"""
+    """简化版武器卡片 - 修复重新定制按钮冲突"""
     st.success(f"🛡️ {name}")
     st.info(f"❤️‍🩹 血泪提醒: {reminder}")
     st.info(f"💡 使用场景: {scenarios}")
     
-    # 保存功能（简化版）
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        if st.button("💾 保存为图片", use_container_width=True, key="save_image"):
-            st.success("🎉 武器卡片已生成！请截图保存。")
-    with col2:
-        if st.button("📋 复制内容", use_container_width=True, key="copy_content"):
-            st.success("📋 内容已准备好复制")
-    with col3:
-        if st.button("🔄 重新定制", use_container_width=True, key="redesign"):
-            st.rerun()
+    # 检查是否已提交反馈，如果已提交就不显示操作按钮
+    feedback_submitted = st.session_state.get("feedback_submitted", False)
+    
+    if not feedback_submitted:
+        # 只有在未提交反馈时才显示操作按钮
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("💾 保存为图片", use_container_width=True, key="save_image"):
+                st.success("🎉 武器卡片已生成！请截图保存。")
+        with col2:
+            if st.button("📋 复制内容", use_container_width=True, key="copy_content"):
+                st.success("📋 内容已准备好复制")
+        with col3:
+            if st.button("🔄 重新定制", use_container_width=True, key="redesign"):
+                # 关键修复：清除武器相关状态，但保留其他流程状态
+                keys_to_clear = ["weapon_name", "personal_reminder", "usage_scenarios"]
+                for key in keys_to_clear:
+                    if key in st.session_state:
+                        del st.session_state[key]
+                st.rerun()
+    else:
+        # 已提交反馈时显示提示信息
+        st.info("💝 您的专属武器已保存！感谢完成15分钟认知觉醒之旅。")
 
 def render_feedback_collection(orchestrator):
-    """渲染反馈收集 - 修复状态管理BUG"""
+    """渲染反馈收集 - 彻底修复状态管理BUG"""
     st.markdown("---")
     st.markdown("### 💬 分享你的体验感受")
     
@@ -812,8 +824,15 @@ def render_feedback_collection(orchestrator):
         )
     
     if st.button("📝 提交反馈", type="primary", key="submit_feedback"):    
-        # 关键修复：设置反馈已提交标记并立即返回
+        # 彻底修复：设置反馈已提交标记，清除可能冲突的状态
         st.session_state["feedback_submitted"] = True
+        
+        # 清除可能导致冲突的状态
+        conflicting_keys = ["weapon_name", "personal_reminder", "usage_scenarios"]
+        for key in conflicting_keys:
+            if key in st.session_state:
+                del st.session_state[key]
+        
         st.success("✅ 反馈已提交！正在跳转到完成页面...")
         st.rerun()
         return  # 重要：立即返回，不执行后续代码

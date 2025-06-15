@@ -1,6 +1,6 @@
 """
-15分钟认知觉醒之旅专用UI组件 - 完整修复版本
-修复了KeyError问题和所有已知bug
+15分钟认知觉醒之旅专用UI组件 - 最终修复版本
+修复了KeyError问题和反馈提交BUG
 """
 import streamlit as st
 import time
@@ -48,10 +48,8 @@ def render_15min_journey():
     try:
         # 检查是否已完成流程（优先检查）
         feedback_submitted = st.session_state.get("feedback_submitted", False)
-        st.write(f"🔍 主流程调试：feedback_submitted = {feedback_submitted}")  # 调试信息
         
         if feedback_submitted:
-            st.write("✅ 检测到已提交反馈，显示完成页面")  # 调试信息
             render_journey_completion()
             return
         elif stage == 0:
@@ -814,11 +812,11 @@ def render_feedback_collection(orchestrator):
         )
     
     if st.button("📝 提交反馈", type="primary", key="submit_feedback"):    
-        # 关键修复：设置反馈已提交标记
+        # 关键修复：设置反馈已提交标记并立即返回
         st.session_state["feedback_submitted"] = True
-        st.success("✅ 反馈已提交！状态已设置！")  # 调试信息
-        st.write(f"🔍 调试: feedback_submitted = {st.session_state.get('feedback_submitted')}")  # 调试信息
-        st.rerun()  # 重新渲染页面，将显示完成页面
+        st.success("✅ 反馈已提交！正在跳转到完成页面...")
+        st.rerun()
+        return  # 重要：立即返回，不执行后续代码
 
 def render_journey_completion():
     """渲染流程完成页面 - 新增函数"""

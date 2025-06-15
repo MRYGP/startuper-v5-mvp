@@ -1,6 +1,6 @@
 """
-15分钟认知觉醒之旅流程编排器 - 修复版本
-修复了错误处理和状态管理问题
+15分钟认知觉醒之旅流程编排器 - P0级修复版本
+🔥 修复AI效能欺骗性断裂：让AI真正使用知识库进行诊断
 """
 import streamlit as st
 import json
@@ -17,6 +17,8 @@ class JourneyOrchestrator:
         self.base_dir = Path(__file__).parent.parent
         self.prompts_dir = self.base_dir / "prompts"
         self.demo_cases_dir = self.base_dir / "demo_cases"
+        # 🔥 P0修复：添加知识库目录
+        self.knowledge_base_dir = self.base_dir / "knowledge_base" / "diagnosis_system"
         
         # 初始化Gemini
         self._init_gemini()
@@ -55,6 +57,34 @@ class JourneyOrchestrator:
                 "stage_completion": [False] * 6,
                 "kevin_case_data": self._load_kevin_case()
             }
+    
+    # 🔥 P0修复：新增知识库读取方法
+    def _load_knowledge_base(self, filename):
+        """加载知识库文件 - P0级核心修复"""
+        try:
+            kb_path = self.knowledge_base_dir / filename
+            with open(kb_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"⚠️ 加载知识库失败 {filename}: {e}")
+            return None
+
+    def _inject_knowledge_base_to_prompt(self, prompt_template, knowledge_data, instruction):
+        """将知识库数据注入到提示词中 - P0级核心修复"""
+        if knowledge_data:
+            knowledge_json = json.dumps(knowledge_data, ensure_ascii=False, indent=2)
+            knowledge_block = f"""
+{instruction}
+
+<knowledge_base>
+{knowledge_json}
+</knowledge_base>
+
+请严格基于上述知识库内容进行分析和响应。"""
+            return prompt_template + "\n\n" + knowledge_block
+        else:
+            fallback_notice = "\n\n⚠️ 知识库暂时不可用，请基于专业知识进行分析。"
+            return prompt_template + fallback_notice
     
     def _load_kevin_case(self):
         """加载Kevin案例数据"""
@@ -170,82 +200,111 @@ class JourneyOrchestrator:
             "success": False
         }
     
+    # 🔥 P0修复：优化JSON解析稳定性
     def extract_json_from_response(self, response_text):
-        """从AI响应中提取JSON"""
+        """从AI响应中提取JSON - 增强版本"""
         try:
-            # 寻找JSON模式
+            # 🔥 优先提取 ```json ``` 包裹的内容
+            json_block_match = re.search(r'```json\s*\n(.*?)\n```', response_text, re.DOTALL)
+            if json_block_match:
+                json_str = json_block_match.group(1).strip()
+                return json.loads(json_str)
+            
+            # 降级到原有方法
             json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
             if json_match:
                 json_str = json_match.group(0)
                 return json.loads(json_str)
             else:
-                # 如果没有找到JSON，返回包装的响应
                 return {"content": response_text, "raw_response": True}
         except Exception as e:
             print(f"⚠️ JSON解析失败: {e}")
             return {"content": response_text, "error": str(e)}
     
+    # 🔥 P0修复：让AI真正使用诊断规则库
     def stage2_diagnosis(self, user_responses):
-        """阶段2：使用P-H-02进行诊断"""
+        """阶段2：使用P-H-02进行诊断 - 真实知识库版本"""
         prompt_template = self.load_prompt_template("P-H-02-v1.0")
         if not prompt_template:
             return self._fallback_diagnosis(user_responses)
         
+        # 🔥 关键修复：读取真实的诊断规则库
+        diagnosis_rules = self._load_knowledge_base("diagnosis_rules.json")
+        
         # 构建用户故事
         user_story = "\n\n".join([f"Q{i+1}: {resp}" for i, resp in enumerate(user_responses)])
         
-        # 用用户故事替换模板中的变量
-        prompt = prompt_template.replace("{user_input}", user_story).replace("{user_answers}", user_story)
+        # 🔥 注入知识库到提示词
+        knowledge_instruction = """
+你必须严格基于以下诊断规则库进行分析。请仔细匹配用户回答中的关键词和情感模式，按照规则库中的算法计算匹配度："""
+        
+        prompt = self._inject_knowledge_base_to_prompt(
+            prompt_template, diagnosis_rules, knowledge_instruction
+        )
+        
+        # 替换用户输入变量
+        prompt = prompt.replace("{user_input}", user_story).replace("{user_answers}", user_story)
+        
+        # 🔥 强制要求中文输出和JSON格式
+        prompt += "\n\n重要：你的回答必须是中文，且必须严格按照JSON格式输出，用```json包裹。"
         
         api_response = self.call_gemini_api(prompt)
         
         # 检查API调用是否成功
         if not api_response.get("success", False):
-            return api_response  # 直接返回错误信息
+            return api_response
         
         result = self.extract_json_from_response(api_response["content"])
         
-        # Kevin案例特殊处理：确保诊断为团队问题
-        if any("合伙人" in resp and "冲突" in resp for resp in user_responses):
-            if "diagnosis_result" in result:
-                result["diagnosis_result"]["final_trap"] = "团队认知偏差：镜子陷阱"
-                result["diagnosis_result"]["matched_prescriptions"] = ["P20"]
-                result["diagnosis_result"]["confidence"] = 0.95
-            else:
-                result["diagnosis_result"] = {
-                    "final_trap": "团队认知偏差：镜子陷阱",
-                    "confidence": 0.95,
-                    "matched_prescriptions": ["P20"]
-                }
+        # 🔥 P0修复：移除硬编码！让AI基于知识库做真实诊断
+        # 删除原来的Kevin案例特殊处理代码，让AI基于规则库判断
         
         return result
     
+    # 🔥 P0修复：让AI真正使用失败案例库
     def stage3_investor_interrogation(self, diagnosis, user_story):
-        """阶段3：使用P-I-01投资人质询"""
+        """阶段3：使用P-I-01投资人质询 - 真实案例库版本"""
         prompt_template = self.load_prompt_template("P-I-01-v1.0")
         if not prompt_template:
             return self._fallback_investor_response(diagnosis)
+        
+        # 🔥 关键修复：读取真实的失败案例库
+        failure_cases = self._load_knowledge_base("failure_cases.json")
         
         # 构建变量替换
         user_case_summary = user_story[:500] + "..." if len(user_story) > 500 else user_story
         final_trap = diagnosis.get("diagnosis_result", {}).get("final_trap", "认知陷阱")
         
-        prompt = prompt_template.replace("{user_case_summary}", user_case_summary)
+        # 🔥 注入案例库到提示词
+        knowledge_instruction = f"""
+你必须从以下失败案例库中选择最相关的案例进行质询。请根据诊断结果 '{final_trap}' 选择最匹配的失败案例："""
+        
+        prompt = self._inject_knowledge_base_to_prompt(
+            prompt_template, failure_cases, knowledge_instruction
+        )
+        
+        prompt = prompt.replace("{user_case_summary}", user_case_summary)
         prompt = prompt.replace("{final_trap}", final_trap)
+        
+        # 🔥 强制中文输出
+        prompt += "\n\n重要：你的回答必须是中文，且必须严格按照JSON格式输出，用```json包裹。"
         
         api_response = self.call_gemini_api(prompt)
         
-        # 检查API调用是否成功
         if not api_response.get("success", False):
-            return api_response  # 直接返回错误信息
+            return api_response
         
         return self.extract_json_from_response(api_response["content"])
     
+    # 🔥 P0修复：增强导师教学阶段
     def stage4_mentor_teaching(self, diagnosis):
-        """阶段4：使用P-M-01导师教学"""
+        """阶段4：使用P-M-01导师教学 - 增强版本"""
         prompt_template = self.load_prompt_template("P-M-01-v1.0")
         if not prompt_template:
             return self._fallback_mentor_response(diagnosis)
+        
+        # 可选：读取智慧金句库增强教学内容
+        wisdom_quotes = self._load_knowledge_base("wisdom_quotes.json")
         
         # 构建变量替换
         final_trap = diagnosis.get("diagnosis_result", {}).get("final_trap", "认知陷阱")
@@ -254,11 +313,21 @@ class JourneyOrchestrator:
         prompt = prompt_template.replace("{final_trap}", final_trap)
         prompt = prompt.replace("{user_case_summary}", user_case_summary)
         
+        # 可选：如果有智慧金句库，注入相关金句
+        if wisdom_quotes:
+            wisdom_instruction = f"""
+你可以参考以下智慧金句库中与 '{final_trap}' 相关的金句来增强教学效果："""
+            prompt = self._inject_knowledge_base_to_prompt(
+                prompt, wisdom_quotes, wisdom_instruction
+            )
+        
+        # 🔥 强制中文输出
+        prompt += "\n\n重要：你的回答必须是中文，且必须严格按照JSON格式输出，用```json包裹。"
+        
         api_response = self.call_gemini_api(prompt)
         
-        # 检查API调用是否成功
         if not api_response.get("success", False):
-            return api_response  # 直接返回错误信息
+            return api_response
         
         return self.extract_json_from_response(api_response["content"])
     
@@ -275,35 +344,48 @@ class JourneyOrchestrator:
         prompt = prompt.replace("{final_trap}", final_trap)
         prompt = prompt.replace("{custom_reminder}", personal_reminder)
         
+        # 🔥 强制中文输出
+        prompt += "\n\n重要：你的回答必须是中文，且必须严格按照JSON格式输出，用```json包裹。"
+        
         api_response = self.call_gemini_api(prompt)
         
-        # 检查API调用是否成功
         if not api_response.get("success", False):
-            return api_response  # 直接返回错误信息
+            return api_response
         
         return self.extract_json_from_response(api_response["content"])
     
-    # 降级处理方法（保持现有逻辑但改进错误信息）
+    # 降级处理方法（保持现有逻辑但移除硬编码）
     def _fallback_diagnosis(self, user_responses):
-        """诊断失败时的降级处理"""
+        """诊断失败时的降级处理 - 移除硬编码"""
         user_story = " ".join(user_responses)
-        if "合伙人" in user_story and "冲突" in user_story:
+        
+        # 🔥 P0修复：使用更通用的规则判断，而非硬编码
+        if any(keyword in user_story for keyword in ["合伙人", "创始人", "冲突", "分歧", "团队"]):
             return {
                 "diagnosis_result": {
                     "final_trap": "团队认知偏差：镜子陷阱",
                     "confidence": 0.90,
                     "matched_prescriptions": ["P20"]
                 },
-                "content": "使用降级处理：基于关键词识别为团队合伙人冲突问题"
+                "content": "使用降级处理：基于关键词识别为团队问题"
             }
-        else:
+        elif any(keyword in user_story for keyword in ["技术", "用户不买账", "没人用", "复杂"]):
             return {
                 "diagnosis_result": {
                     "final_trap": "技术至上偏见",
                     "confidence": 0.85,
                     "matched_prescriptions": ["P01"]
                 },
-                "content": "使用降级处理：通用技术型认知陷阱"
+                "content": "使用降级处理：基于关键词识别为技术偏见"
+            }
+        else:
+            return {
+                "diagnosis_result": {
+                    "final_trap": "确认偏见",
+                    "confidence": 0.80,
+                    "matched_prescriptions": ["P02"]
+                },
+                "content": "使用降级处理：通用认知偏见"
             }
     
     def _fallback_investor_response(self, diagnosis):
@@ -452,7 +534,7 @@ class JourneyOrchestrator:
             "content": "使用降级处理：基础武器卡片模板"
         }
     
-    # 流程控制方法
+    # 流程控制方法（保持不变）
     def get_current_stage(self):
         """获取当前阶段"""
         return st.session_state.journey["stage"]

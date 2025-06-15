@@ -797,23 +797,23 @@ def render_feedback_collection(orchestrator):
             key="most_valuable"
         )
     
-        if st.button("📝 提交反馈", type="primary", key="submit_feedback"):
-    st.success("🙏 感谢你的宝贵反馈！")
-    st.success("🎉 15分钟认知觉醒之旅已完成！")
-    
-    # 显示结束选项，而不是自动跳转
-    st.markdown("---")
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("🔄 重新体验", use_container_width=True, key="restart_journey"):
-            # 清空所有状态并重新开始
-            orchestrator.reset_journey()
-            for key in ["mastery_passed", "user_responses"]:
-                if key in st.session_state:
-                    del st.session_state[key]
-            st.rerun()
-    
-    with col2:
-        if st.button("🏠 返回首页", use_container_width=True, key="go_home"):
-            st.session_state.current_page = "🏠 产品介绍"
-            st.rerun()
+if st.button("📝 提交反馈", type="primary", key="submit_feedback"):
+        st.success("🙏 感谢你的宝贵反馈！")
+        st.success("🎉 15分钟认知觉醒之旅已完成！")
+        
+        # 显示结束选项，而不是自动跳转
+        st.markdown("---")
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("🔄 重新体验", use_container_width=True, key="restart_journey"):
+                # 清空所有状态并重新开始
+                orchestrator.reset_journey()
+                for key in ["mastery_passed", "user_responses"]:
+                    if key in st.session_state:
+                        del st.session_state[key]
+                st.rerun()
+        
+        with col2:
+            if st.button("🏠 返回首页", use_container_width=True, key="go_home"):
+                st.session_state.current_page = "🏠 产品介绍"
+                st.rerun()

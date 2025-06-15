@@ -39,10 +39,10 @@ def render_15min_journey():
         return
     
     # 应用自定义CSS
-    apply_journey_css()
+        apply_journey_css()
     
     # 渲染进度指示器
-    render_progress_indicator(stage)
+        render_progress_indicator(stage)
     
     # 根据阶段渲染对应界面
     try:

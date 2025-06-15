@@ -1,0 +1,495 @@
+/* 🧠 认知黑匣子 - 主样式文件 */
+
+/* ==========================================================================
+   基础设置
+   ========================================================================== */
+
+/* 导入字体 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* 主色调 */
+  --primary-color: #667eea;
+  --primary-dark: #764ba2;
+  --secondary-color: #f093fb;
+  
+  /* 功能色彩 */
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --info-color: #3b82f6;
+  
+  /* 药方分类颜色 */
+  --basics-color: #2563eb;
+  --advanced-color: #7c3aed;
+  --team-color: #dc2626;
+  
+  /* 灰度系统 */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  
+  /* 间距系统 */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  
+  /* 边角半径 */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  
+  /* 阴影系统 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   全局重置和基础样式
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--gray-800);
+  background-color: var(--gray-50);
+  margin: 0;
+  padding: 0;
+}
+
+/* 隐藏Streamlit默认元素 */
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; }
+header { visibility: hidden; }
+.stDeployButton { display: none; }
+
+/* ==========================================================================
+   主要布局组件
+   ========================================================================== */
+
+/* 主标题区域 */
+.main-header {
+  text-align: center;
+  padding: var(--spacing-2xl) 0;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  border-radius: var(--border-radius-lg);
+  margin-bottom: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.main-header h1 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-header p {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   药方卡片系统
+   ========================================================================== */
+
+/* 基础药方卡片 */
+.prescription-card {
+  background: white;
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-md);
+  border-left: 4px solid var(--primary-color);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.prescription-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.prescription-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+/* 药方分类样式 */
+.prescription-card.basics {
+  border-left-color: var(--basics-color);
+}
+
+.prescription-card.advanced {
+  border-left-color: var(--advanced-color);
+}
+
+.prescription-card.team {
+  border-left-color: var(--team-color);
+}
+
+/* 药方标题 */
+.prescription-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--gray-800);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* 影响评级可视化 */
+.impact-score {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-sm) 0;
+}
+
+.impact-bars {
+  display: flex;
+  gap: 2px;
+}
+
+.impact-bar {
+  width: 8px;
+  height: 16px;
+  border-radius: 2px;
+  background-color: var(--gray-200);
+  transition: background-color 0.3s ease;
+}
+
+.impact-bar.filled {
+  background-color: var(--error-color);
+}
+
+.impact-bar.filled.high {
+  background-color: var(--error-color);
+}
+
+.impact-bar.filled.medium {
+  background-color: var(--warning-color);
+}
+
+.impact-bar.filled.low {
+  background-color: var(--success-color);
+}
+
+/* ==========================================================================
+   诊断结果展示
+   ========================================================================== */
+
+.diagnosis-result {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  border-left: 4px solid var(--success-color);
+  margin: var(--spacing-lg) 0;
+  box-shadow: var(--shadow-md);
+}
+
+.confidence-meter {
+  background: white;
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+  border: 1px solid var(--gray-200);
+}
+
+.confidence-bar {
+  width: 100%;
+  height: 8px;
+  background-color: var(--gray-200);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: var(--spacing-sm);
+}
+
+.confidence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--success-color), var(--primary-color));
+  border-radius: 4px;
+  transition: width 0.8s ease;
+}
+
+/* 认知突破点 */
+.cognitive-breakthrough {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  margin: var(--spacing-lg) 0;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.cognitive-breakthrough h4 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.cognitive-breakthrough p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* ==========================================================================
+   Demo案例卡片
+   ========================================================================== */
+
+.demo-case-card {
+  background: #fff3cd;
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border-left: 3px solid #ffc107;
+  margin: var(--spacing-sm) 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.demo-case-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.demo-case-card.kevin-special {
+  background: #f8d7da;
+  border-left-color: #dc3545;
+  position: relative;
+}
+
+.demo-case-card.kevin-special::after {
+  content: '🔥 Kevin专用';
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background: #dc3545;
+  color: white;
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   进度条和状态指示器
+   ========================================================================== */
+
+.progress-container {
+  background: var(--gray-100);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  border: 1px solid var(--gray-200);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.progress-bar-container {
+  background: var(--gray-300);
+  border-radius: var(--border-radius-sm);
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+  border-radius: var(--border-radius-sm);
+  transition: width 0.6s ease;
+}
+
+/* ==========================================================================
+   按钮系统
+   ========================================================================== */
+
+/* Streamlit按钮覆盖 */
+.stButton > button {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: var(--border-radius-md) !important;
+  padding: 0.5rem 1.5rem !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  transition: all 0.3s ease !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.stButton > button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.stButton > button:active {
+  transform: translateY(0) !important;
+}
+
+/* 特殊按钮样式 */
+.kevin-test-button > button {
+  background: linear-gradient(135deg, #dc2626, #991b1b) !important;
+  animation: pulse 2s infinite !important;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+  }
+}
+
+/* ==========================================================================
+   测试页面样式
+   ========================================================================== */
+
+.test-status-card {
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+  border: 2px solid;
+}
+
+.test-status-card.critical {
+  background: #fef2f2;
+  border-color: var(--error-color);
+  color: #991b1b;
+}
+
+.test-status-card.important {
+  background: #fffbeb;
+  border-color: var(--warning-color);
+  color: #92400e;
+}
+
+.test-status-card.moderate {
+  background: #f0f9ff;
+  border-color: var(--info-color);
+  color: #1e40af;
+}
+
+/* ==========================================================================
+   响应式设计
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .main-header {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+  
+  .main-header h1 {
+    font-size: 2rem;
+  }
+  
+  .prescription-card,
+  .diagnosis-result {
+    margin: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+  
+  .demo-case-card {
+    margin: var(--spacing-md);
+  }
+}
+
+/* ==========================================================================
+   动画和过渡效果
+   ========================================================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.5s ease-out;
+}
+
+/* ==========================================================================
+   工具类
+   ========================================================================== */
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+
+.font-weight-normal { font-weight: 400; }
+.font-weight-medium { font-weight: 500; }
+.font-weight-semibold { font-weight: 600; }
+.font-weight-bold { font-weight: 700; }
+
+.text-primary { color: var(--primary-color); }
+.text-success { color: var(--success-color); }
+.text-warning { color: var(--warning-color); }
+.text-error { color: var(--error-color); }
+
+.bg-primary { background-color: var(--primary-color); }
+.bg-success { background-color: var(--success-color); }
+.bg-warning { background-color: var(--warning-color); }
+.bg-error { background-color: var(--error-color); }

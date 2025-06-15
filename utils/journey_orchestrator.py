@@ -63,10 +63,21 @@ class JourneyOrchestrator:
         """加载知识库文件 - P0级核心修复"""
         try:
             kb_path = self.knowledge_base_dir / filename
+            print(f"🔍 尝试读取知识库: {kb_path}")
+            print(f"🔍 文件是否存在: {kb_path.exists()}")
+            
             with open(kb_path, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                data = json.load(f)
+                print(f"✅ 成功读取知识库 {filename}，包含 {len(data)} 个顶级键")
+                if filename == "diagnosis_rules.json" and "problem_categories" in data:
+                    print(f"🔍 诊断规则库包含 {len(data['problem_categories'])} 个问题类别")
+                elif filename == "failure_cases.json" and "failure_categories" in data:
+                    print(f"🔍 失败案例库包含 {len(data['failure_categories'])} 个案例类别")
+                return data
         except Exception as e:
-            print(f"⚠️ 加载知识库失败 {filename}: {e}")
+            print(f"❌ 加载知识库失败 {filename}: {e}")
+            print(f"❌ 知识库目录: {self.knowledge_base_dir}")
+            print(f"❌ 知识库目录是否存在: {self.knowledge_base_dir.exists()}")
             return None
 
     def _inject_knowledge_base_to_prompt(self, prompt_template, knowledge_data, instruction):
@@ -224,6 +235,14 @@ class JourneyOrchestrator:
     # 🔥 P0修复：让AI真正使用诊断规则库
     def stage2_diagnosis(self, user_responses):
         """阶段2：使用P-H-02进行诊断 - 真实知识库版本"""
+        # 🔥 临时调试：检查数据传递
+        print(f"🔍 诊断阶段收到的user_responses: {user_responses}")
+        print(f"🔍 user_responses长度: {len(user_responses) if user_responses else 'None'}")
+        
+        if not user_responses or len(user_responses) == 0:
+            print("❌ 用户回答为空！使用降级处理")
+            return self._fallback_diagnosis([])
+        
         prompt_template = self.load_prompt_template("P-H-02-v1.0")
         if not prompt_template:
             return self._fallback_diagnosis(user_responses)
@@ -233,37 +252,50 @@ class JourneyOrchestrator:
         
         # 构建用户故事
         user_story = "\n\n".join([f"Q{i+1}: {resp}" for i, resp in enumerate(user_responses)])
+        print(f"🔍 构建的用户故事: {user_story[:200]}...")
         
-        # 🔥 注入知识库到提示词
-        knowledge_instruction = """
-你必须严格基于以下诊断规则库进行分析。请仔细匹配用户回答中的关键词和情感模式，按照规则库中的算法计算匹配度："""
-        
-        prompt = self._inject_knowledge_base_to_prompt(
-            prompt_template, diagnosis_rules, knowledge_instruction
-        )
-        
-        # 替换用户输入变量
-        prompt = prompt.replace("{user_input}", user_story).replace("{user_answers}", user_story)
+        # 🔥 强化知识库注入 - 更强制的方式
+        if diagnosis_rules:
+            knowledge_json = json.dumps(diagnosis_rules, ensure_ascii=False, indent=2)
+            prompt = f"""## 诊断规则库
+以下是你必须严格遵循的诊断规则库，包含所有认知陷阱的关键词匹配规则：
+
+{knowledge_json}
+
+## 用户输入数据
+用户已回答6个问题，完整内容如下：
+{user_story}
+
+## 执行指令
+{prompt_template}
+
+CRITICAL: 你必须严格基于上述诊断规则库进行分析，不得脱离规则库内容。请仔细匹配关键词和情感模式。"""
+        else:
+            prompt = f"{prompt_template}\n\n用户回答：\n{user_story}"
         
         # 🔥 强制要求中文输出和JSON格式
-        prompt += "\n\n重要：你的回答必须是中文，且必须严格按照JSON格式输出，用```json包裹。"
+        prompt += "\n\n重要：你的回答必须是中文，且必须严格按照JSON格式输出，用```json包裹。绝对不要输出思考过程，只输出JSON结果。"
+        
+        print(f"🔍 发送给AI的prompt长度: {len(prompt)}")
         
         api_response = self.call_gemini_api(prompt)
         
         # 检查API调用是否成功
         if not api_response.get("success", False):
+            print(f"❌ API调用失败: {api_response.get('error')}")
             return api_response
         
         result = self.extract_json_from_response(api_response["content"])
-        
-        # 🔥 P0修复：移除硬编码！让AI基于知识库做真实诊断
-        # 删除原来的Kevin案例特殊处理代码，让AI基于规则库判断
+        print(f"🔍 诊断结果: {result}")
         
         return result
     
     # 🔥 P0修复：让AI真正使用失败案例库
     def stage3_investor_interrogation(self, diagnosis, user_story):
         """阶段3：使用P-I-01投资人质询 - 真实案例库版本"""
+        print(f"🔍 投资人阶段 - 诊断结果: {diagnosis}")
+        print(f"🔍 投资人阶段 - 用户故事长度: {len(user_story) if user_story else 'None'}")
+        
         prompt_template = self.load_prompt_template("P-I-01-v1.0")
         if not prompt_template:
             return self._fallback_investor_response(diagnosis)
@@ -275,26 +307,44 @@ class JourneyOrchestrator:
         user_case_summary = user_story[:500] + "..." if len(user_story) > 500 else user_story
         final_trap = diagnosis.get("diagnosis_result", {}).get("final_trap", "认知陷阱")
         
-        # 🔥 注入案例库到提示词
-        knowledge_instruction = f"""
-你必须从以下失败案例库中选择最相关的案例进行质询。请根据诊断结果 '{final_trap}' 选择最匹配的失败案例："""
+        print(f"🔍 final_trap: {final_trap}")
+        print(f"🔍 user_case_summary: {user_case_summary[:100]}...")
         
-        prompt = self._inject_knowledge_base_to_prompt(
-            prompt_template, failure_cases, knowledge_instruction
-        )
-        
-        prompt = prompt.replace("{user_case_summary}", user_case_summary)
-        prompt = prompt.replace("{final_trap}", final_trap)
+        # 🔥 强化案例库注入 - 更强制的方式
+        if failure_cases:
+            cases_json = json.dumps(failure_cases, ensure_ascii=False, indent=2)
+            prompt = f"""## 失败案例库
+以下是你必须使用的宏大商业失败案例库：
+
+{cases_json}
+
+## 诊断信息
+- 用户案例摘要: {user_case_summary}
+- 诊断出的认知陷阱: {final_trap}
+
+## 执行指令
+{prompt_template}
+
+CRITICAL: 你必须从上述案例库中选择与"{final_trap}"最相关的具体案例，不得使用通用模板。必须生成具体的、针对性的质询内容。"""
+        else:
+            prompt = prompt_template.replace("{user_case_summary}", user_case_summary)
+            prompt = prompt.replace("{final_trap}", final_trap)
         
         # 🔥 强制中文输出
-        prompt += "\n\n重要：你的回答必须是中文，且必须严格按照JSON格式输出，用```json包裹。"
+        prompt += "\n\n重要：你的回答必须是中文，且必须严格按照JSON格式输出，用```json包裹。必须基于具体的失败案例，不得使用模板内容。"
+        
+        print(f"🔍 投资人prompt长度: {len(prompt)}")
         
         api_response = self.call_gemini_api(prompt)
         
         if not api_response.get("success", False):
+            print(f"❌ 投资人API调用失败: {api_response.get('error')}")
             return api_response
         
-        return self.extract_json_from_response(api_response["content"])
+        result = self.extract_json_from_response(api_response["content"])
+        print(f"🔍 投资人结果: {result}")
+        
+        return result
     
     # 🔥 P0修复：增强导师教学阶段
     def stage4_mentor_teaching(self, diagnosis):

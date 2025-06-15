@@ -1,6 +1,6 @@
 """
-认知黑匣子 Streamlit 主应用 - 新增15分钟觉醒之旅
-基于现有app.py结构添加新功能
+认知黑匣子 Streamlit 主应用 - 修复版本
+修复了按钮回调和页面导航问题
 """
 import streamlit as st
 import json
@@ -98,6 +98,38 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# 修复：添加回调函数
+def start_journey_callback():
+    """启动15分钟觉醒之旅的回调函数"""
+    # 初始化journey状态
+    if "journey" not in st.session_state:
+        st.session_state.journey = {
+            "stage": 0,
+            "demo_mode": True,
+            "demo_case_id": "case_02_team_conflict",
+            "start_time": None,
+            "user_responses": [],
+            "ai_responses": {},
+            "stage_completion": [False] * 6,
+        }
+    
+    # 重置相关状态
+    st.session_state.user_responses = []
+    if "mastery_passed" in st.session_state:
+        del st.session_state["mastery_passed"]
+    
+    # 重置journey阶段为0（开场）
+    st.session_state.journey["stage"] = 0
+    st.session_state.journey["user_responses"] = []
+    st.session_state.journey["ai_responses"] = {}
+    
+    # 设置当前页面为15分钟之旅
+    st.session_state.current_page = "🎭 15分钟觉醒之旅"
+
+def set_page_callback(page_name):
+    """设置页面的回调函数"""
+    st.session_state.current_page = page_name
+
 def main():
     """主应用函数"""
     
@@ -106,6 +138,10 @@ def main():
         st.session_state.diagnosis_engine = DiagnosisEngine()
         st.session_state.prescription_loader = PrescriptionLoader()
         st.session_state.demo_manager = DemoCaseManager()
+    
+    # 初始化页面状态
+    if 'current_page' not in st.session_state:
+        st.session_state.current_page = "🏠 产品介绍"
     
     # 主标题
     st.markdown(f"""
@@ -127,17 +163,31 @@ def main():
         </div>
         """, unsafe_allow_html=True)
         
+        # 修复：使用session_state中的current_page
+        page_options = [
+            "🏠 产品介绍",
+            "🎭 15分钟觉醒之旅",  # 新增核心功能
+            "🔍 智能诊断", 
+            "🧬 Demo案例体验",
+            "📚 药方库浏览", 
+            "🧪 Kevin案例测试"
+        ]
+        
+        # 确保当前页面在选项列表中
+        if st.session_state.current_page not in page_options:
+            st.session_state.current_page = "🏠 产品介绍"
+        
         page = st.selectbox(
             "选择功能",
-            [
-                "🏠 产品介绍",
-                "🎭 15分钟觉醒之旅",  # 新增核心功能
-                "🔍 智能诊断", 
-                "🧬 Demo案例体验",
-                "📚 药方库浏览", 
-                "🧪 Kevin案例测试"
-            ]
+            page_options,
+            index=page_options.index(st.session_state.current_page) if st.session_state.current_page in page_options else 0,
+            key="page_selector"
         )
+        
+        # 更新当前页面状态
+        if page != st.session_state.current_page:
+            st.session_state.current_page = page
+            st.rerun()
         
         # 添加流程说明
         if page == "🎭 15分钟觉醒之旅":
@@ -175,7 +225,7 @@ def main():
         render_kevin_test_page()
 
 def render_home_page():
-    """渲染产品介绍主页"""
+    """渲染产品介绍主页 - 修复按钮回调"""
     col1, col2 = st.columns([2, 1])
     
     with col1:
@@ -190,7 +240,7 @@ def render_home_page():
         - **个性化**：基于真实案例的定制体验
         
         ### 🚀 立即体验
-        点击左侧的"**15分钟觉醒之旅**"开始你的认知升级！
+        点击右侧的"**15分钟觉醒之旅**"开始你的认知升级！
         """)
     
     with col2:
@@ -206,19 +256,21 @@ def render_home_page():
         </div>
         """, unsafe_allow_html=True)
         
-        if st.button("🚀 开始15分钟之旅", type="primary", use_container_width=True):
-            st.session_state.sidebar_selection = "🎭 15分钟觉醒之旅"
+        # 修复：添加正确的回调函数
+        if st.button("🚀 开始15分钟之旅", type="primary", use_container_width=True, 
+                    on_click=start_journey_callback):
             st.rerun()
         
         # 其他功能快速入口
         st.markdown("### 🔧 其他功能")
         
+        # 修复：添加回调函数
         if st.button("🔍 智能诊断", use_container_width=True):
-            st.session_state.sidebar_selection = "🔍 智能诊断"
+            st.session_state.current_page = "🔍 智能诊断"
             st.rerun()
             
         if st.button("🧬 Demo案例", use_container_width=True):
-            st.session_state.sidebar_selection = "🧬 Demo案例体验"
+            st.session_state.current_page = "🧬 Demo案例体验"
             st.rerun()
 
 # 保持现有的页面渲染函数
@@ -268,8 +320,9 @@ def diagnose_user_input(user_input):
                 
                 col1, col2, col3 = st.columns([1, 2, 1])
                 with col2:
-                    if st.button("🎭 体验15分钟觉醒之旅", type="secondary", use_container_width=True):
-                        st.session_state.sidebar_selection = "🎭 15分钟觉醒之旅"
+                    # 修复：添加回调函数
+                    if st.button("🎭 体验15分钟觉醒之旅", type="secondary", use_container_width=True,
+                                on_click=start_journey_callback):
                         st.rerun()
             else:
                 st.error("诊断失败，请重新尝试")
@@ -330,8 +383,14 @@ def render_demo_cases_page():
         </div>
         """, unsafe_allow_html=True)
         
+        # 修复：为体验按钮添加更好的处理
         if st.button(f"体验案例：{meta.get('protagonist', '未知')}", key=f"demo_{case_id}"):
-            experience_demo_case(case_id, case_data)
+            if case_id == "case_02_team_conflict":  # Kevin案例
+                # 直接启动15分钟之旅
+                start_journey_callback()
+                st.rerun()
+            else:
+                experience_demo_case(case_id, case_data)
 
 def render_prescription_library_page():
     """渲染药方库浏览页面（保持现有逻辑）"""
@@ -366,7 +425,7 @@ def render_prescription_library_page():
                         st.markdown(f"• {symptom}")
 
 def render_kevin_test_page():
-    """渲染Kevin案例测试页面（保持现有逻辑并增强）"""
+    """渲染Kevin案例测试页面 - 修复按钮回调"""
     st.markdown("## 🧪 Kevin案例专项测试")
     st.markdown("### 验证系统对合伙人冲突问题的处理能力")
     
@@ -391,9 +450,9 @@ def render_kevin_test_page():
         st.markdown("### 🎭 完整流程测试")
         st.info("💡 想要测试Kevin案例的完整15分钟流程？")
         
-        if st.button("🎭 Kevin案例15分钟流程", type="secondary", use_container_width=True):
-            # 引导到15分钟流程，并预填Kevin案例
-            st.session_state.sidebar_selection = "🎭 15分钟觉醒之旅"
+        # 修复：添加正确的回调函数
+        if st.button("🎭 Kevin案例15分钟流程", type="secondary", use_container_width=True,
+                    on_click=start_journey_callback):
             st.rerun()
     
     if st.button("🧪 执行Kevin案例测试", type="primary"):

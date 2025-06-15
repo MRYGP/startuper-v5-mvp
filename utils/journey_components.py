@@ -1,6 +1,6 @@
 """
-15分钟认知觉醒之旅专用UI组件
-基于现有提示词的输出格式设计UI界面
+15分钟认知觉醒之旅专用UI组件 - 修复版本
+修复了用户回答状态管理和HTML渲染问题
 """
 import streamlit as st
 import time
@@ -114,11 +114,20 @@ def apply_journey_css():
         margin: 1rem 0;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    
+    .answer-completed {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 def render_progress_indicator(current_stage):
-    """渲染进度指示器"""
+    """渲染进度指示器 - 修复HTML渲染"""
     stages = [
         {"name": "🎭 开场", "emoji": "🎭"},
         {"name": "📝 情境", "emoji": "📝"},
@@ -146,10 +155,11 @@ def render_progress_indicator(current_stage):
         '''
     
     progress_html += '</div>'
+    # 修复：添加 unsafe_allow_html=True
     st.markdown(progress_html, unsafe_allow_html=True)
 
 def render_ai_role_header(role_name, stage_num, description, color):
-    """渲染AI角色头部"""
+    """渲染AI角色头部 - 修复HTML渲染"""
     role_configs = {
         "主持人": {"icon": "🎯", "time": "4分钟"},
         "投资人": {"icon": "💼", "time": "3分钟"},
@@ -159,7 +169,7 @@ def render_ai_role_header(role_name, stage_num, description, color):
     
     config = role_configs.get(role_name, {"icon": "🎭", "time": "3分钟"})
     
-    st.markdown(f'''
+    header_html = f'''
     <div class="ai-role-header" style="background: linear-gradient(135deg, {color}, {color}dd);">
         <h1>{config["icon"]} {role_name}</h1>
         <p style="margin: 0.5rem 0; font-size: 1.1rem; opacity: 0.9;">
@@ -175,11 +185,13 @@ def render_ai_role_header(role_name, stage_num, description, color):
             ⏱️ 预计用时: {config["time"]}
         </div>
     </div>
-    ''', unsafe_allow_html=True)
+    '''
+    # 修复：添加 unsafe_allow_html=True
+    st.markdown(header_html, unsafe_allow_html=True)
 
 def render_opening_stage(orchestrator):
-    """阶段0：开场页面"""
-    st.markdown('''
+    """阶段0：开场页面 - 修复HTML渲染"""
+    opening_html = '''
     <div style="text-align: center; padding: 3rem 1rem;">
         <h1 style="color: #667eea; font-size: 3rem; margin-bottom: 1rem;">🧠 认知黑匣子</h1>
         <h2 style="color: #764ba2; font-size: 2rem; margin-bottom: 2rem;">15分钟认知觉醒之旅</h2>
@@ -201,7 +213,9 @@ def render_opening_stage(orchestrator):
             <p style="margin-bottom: 0;">一个专属于你的认知武器</p>
         </div>
     </div>
-    ''', unsafe_allow_html=True)
+    '''
+    # 修复：添加 unsafe_allow_html=True
+    st.markdown(opening_html, unsafe_allow_html=True)
     
     # 智慧金句展示
     render_daily_wisdom()
@@ -214,7 +228,7 @@ def render_opening_stage(orchestrator):
             st.rerun()
 
 def render_daily_wisdom():
-    """渲染每日智慧金句"""
+    """渲染每日智慧金句 - 修复HTML渲染"""
     quotes = [
         {
             "text": "第一原理是你不能欺骗自己——而你是最容易被欺骗的人。",
@@ -233,7 +247,7 @@ def render_daily_wisdom():
     import random
     daily_quote = random.choice(quotes)
     
-    st.markdown(f'''
+    wisdom_html = f'''
     <div style="
         background: #f8f9fa;
         padding: 1.5rem;
@@ -247,14 +261,20 @@ def render_daily_wisdom():
         <p style="font-size: 1.1rem; margin: 1rem 0;">"{daily_quote["text"]}"</p>
         <p style="text-align: right; margin-bottom: 0; color: #666;">—— {daily_quote["author"]}</p>
     </div>
-    ''', unsafe_allow_html=True)
+    '''
+    # 修复：添加 unsafe_allow_html=True
+    st.markdown(wisdom_html, unsafe_allow_html=True)
 
 def render_demo_input_stage(orchestrator):
-    """阶段1：交互式Demo输入"""
+    """阶段1：交互式Demo输入 - 修复用户回答状态管理"""
     render_ai_role_header("主持人", 1, "温和引导，深度聚焦", "#667eea")
     
     st.markdown("## 📋 请回答以下6个问题")
     st.markdown("*您可以体验Kevin的真实案例，或随时切换输入自己的情况*")
+    
+    # 确保Session State正确初始化
+    if "user_responses" not in st.session_state:
+        st.session_state.user_responses = []
     
     questions = [
         "你做了什么事情没有达到预期的效果？",
@@ -267,83 +287,106 @@ def render_demo_input_stage(orchestrator):
     
     kevin_case = st.session_state.journey["kevin_case_data"]
     kevin_answers = kevin_case["six_answers"]
-    
-    user_responses = []
     demo_mode = orchestrator.is_demo_mode()
     
-    # 问题输入循环
+    # 关键修复：使用Session State中的列表长度
+    completed_count = len(st.session_state.user_responses)
+    
+    # 问题输入循环 - 逐个显示问题
     for i, question in enumerate(questions):
         st.markdown(f"### 问题 {i+1}")
         st.markdown(f"**{question}**")
         
-        if demo_mode:
-            # Demo模式：显示Kevin的回答
-            demo_answer = kevin_answers[i] if i < len(kevin_answers) else "暂无预设答案"
+        # 判断当前问题是否已完成
+        is_completed = i < completed_count
+        
+        if is_completed:
+            # 显示已保存的答案
+            answer_preview = st.session_state.user_responses[i]
+            if len(answer_preview) > 100:
+                answer_preview = answer_preview[:100] + "..."
             
-            # 显示Kevin的Demo答案
-            st.markdown(f'''
-            <div class="demo-answer-box">
-                <small style="color: #667eea; font-weight: bold;">💭 {kevin_case["protagonist"]}的回答：</small><br>
-                <div style="margin-top: 0.5rem;">{demo_answer}</div>
+            completed_html = f'''
+            <div class="answer-completed">
+                <strong>✅ 已保存</strong><br>
+                <div style="margin-top: 0.5rem; font-style: italic;">{answer_preview}</div>
             </div>
-            ''', unsafe_allow_html=True)
-            
-            col1, col2 = st.columns([3, 1])
-            with col1:
+            '''
+            st.markdown(completed_html, unsafe_allow_html=True)
+        else:
+            # 显示输入界面 - 只显示当前需要回答的问题
+            if demo_mode and i < len(kevin_answers):
+                demo_answer = kevin_answers[i]
+                
+                # 显示Kevin的Demo答案
+                demo_html = f'''
+                <div class="demo-answer-box">
+                    <small style="color: #667eea; font-weight: bold;">💭 {kevin_case["protagonist"]}的回答：</small><br>
+                    <div style="margin-top: 0.5rem;">{demo_answer}</div>
+                </div>
+                '''
+                st.markdown(demo_html, unsafe_allow_html=True)
+                
+                col1, col2 = st.columns([3, 1])
+                with col1:
+                    user_input = st.text_area(
+                        "您的回答：",
+                        value="",
+                        placeholder="点击这里输入您的真实情况，或直接确认Kevin的回答",
+                        height=80,
+                        key=f"input_{i}"
+                    )
+                
+                with col2:
+                    # 修复：确认Kevin回答的回调函数
+                    if not user_input.strip():
+                        if st.button("👍 确认Kevin的回答", key=f"confirm_{i}"):
+                            st.session_state.user_responses.append(demo_answer)
+                            st.rerun()
+                    else:
+                        # 用户开始输入，提供保存选项
+                        if st.button("💾 保存我的回答", key=f"save_{i}"):
+                            st.session_state.user_responses.append(user_input.strip())
+                            orchestrator.switch_to_custom_mode()
+                            st.rerun()
+            else:
+                # 自定义模式：普通输入
                 user_input = st.text_area(
                     "您的回答：",
-                    value="",
-                    placeholder="点击这里输入您的真实情况，或直接确认Kevin的回答",
-                    height=80,
-                    key=f"input_{i}"
+                    height=100,
+                    key=f"custom_{i}",
+                    placeholder="请详细描述您的情况..."
                 )
+                if st.button(f"保存第{i+1}个回答", key=f"save_custom_{i}"):
+                    if user_input.strip():
+                        st.session_state.user_responses.append(user_input.strip())
+                        st.rerun()
             
-            with col2:
-                if not user_input.strip():
-                    if st.button("👍 确认Kevin的回答", key=f"confirm_{i}"):
-                        user_responses.append(demo_answer)
-                        st.success("✅ 已确认")
-                else:
-                    # 用户开始输入，切换模式
-                    orchestrator.switch_to_custom_mode()
-                    demo_mode = False
-                    if st.button("💾 保存我的回答", key=f"save_{i}"):
-                        user_responses.append(user_input)
-                        st.success("✅ 已保存")
-        else:
-            # 自定义模式：普通输入
-            user_input = st.text_area(
-                "您的回答：",
-                height=100,
-                key=f"custom_{i}",
-                placeholder="请详细描述您的情况..."
-            )
-            if st.button(f"保存第{i+1}个回答", key=f"save_custom_{i}"):
-                if user_input.strip():
-                    user_responses.append(user_input)
-                    st.success("✅ 已保存")
+            # 只显示第一个未完成的问题，然后跳出循环
+            break
         
         st.markdown("---")
     
     # 显示完成状态和下一步按钮
-    if len(user_responses) == 6:
+    remaining = 6 - completed_count
+    
+    if completed_count == 6:
         st.success("🎉 所有问题已完成！")
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             if st.button("🔬 开始AI深度诊断", type="primary", use_container_width=True, key="start_diagnosis"):
-                # 保存用户回答
-                orchestrator.save_user_responses(user_responses)
+                # 保存用户回答到orchestrator
+                orchestrator.save_user_responses(st.session_state.user_responses)
                 
                 # 推进到诊断阶段
                 orchestrator.advance_stage()
                 st.rerun()
     else:
-        remaining = 6 - len(user_responses)
         st.info(f"📝 还需完成 {remaining} 个问题")
 
 def render_diagnosis_stage(orchestrator):
-    """阶段2：AI诊断分析"""
+    """阶段2：AI诊断分析 - 修复错误处理"""
     st.markdown("### 🤖 AI正在分析您的认知模式...")
     
     # 检查是否已有诊断结果
@@ -351,7 +394,10 @@ def render_diagnosis_stage(orchestrator):
     
     if not cached_diagnosis:
         with st.spinner("深度分析中，请稍候..."):
-            user_responses = st.session_state.journey["user_responses"]
+            user_responses = st.session_state.get("user_responses", [])
+            if not user_responses:
+                user_responses = st.session_state.journey.get("user_responses", [])
+            
             diagnosis = orchestrator.stage2_diagnosis(user_responses)
             
             if diagnosis:
@@ -359,12 +405,22 @@ def render_diagnosis_stage(orchestrator):
                 cached_diagnosis = diagnosis
     
     if cached_diagnosis:
+        # 检查是否有错误
+        if "error" in cached_diagnosis:
+            st.error(f"😔 {cached_diagnosis['error']}")
+            if st.button("🔄 重新诊断", key="retry_diagnosis"):
+                # 清除缓存的错误结果
+                if "stage_2" in st.session_state.journey["ai_responses"]:
+                    del st.session_state.journey["ai_responses"]["stage_2"]
+                st.rerun()
+            return
+        
         # 显示诊断结果
         diagnosis_result = cached_diagnosis.get("diagnosis_result", {})
         final_trap = diagnosis_result.get("final_trap", "认知陷阱")
         confidence = diagnosis_result.get("confidence", 0.9)
         
-        st.markdown(f'''
+        result_html = f'''
         <div style="
             background: linear-gradient(135deg, #28a745, #20c997);
             color: white;
@@ -378,7 +434,8 @@ def render_diagnosis_stage(orchestrator):
             <h3 style="margin: 1rem 0;">{final_trap}</h3>
             <p style="font-size: 1.1rem;">AI诊断置信度: {confidence:.1%}</p>
         </div>
-        ''', unsafe_allow_html=True)
+        '''
+        st.markdown(result_html, unsafe_allow_html=True)
         
         st.markdown("### 📊 诊断详情")
         if cached_diagnosis.get("raw_response"):
@@ -391,7 +448,7 @@ def render_diagnosis_stage(orchestrator):
                 st.rerun()
     else:
         st.error("😔 诊断服务暂时不可用，请稍后重试")
-        if st.button("🔄 重新诊断", key="retry_diagnosis"):
+        if st.button("🔄 重新诊断", key="retry_diagnosis_main"):
             st.rerun()
 
 def render_investor_stage(orchestrator):
@@ -409,7 +466,9 @@ def render_investor_stage(orchestrator):
     
     if not cached_interrogation:
         with st.spinner("投资人雷正在准备犀利质询..."):
-            user_responses = st.session_state.journey["user_responses"]
+            user_responses = st.session_state.get("user_responses", [])
+            if not user_responses:
+                user_responses = st.session_state.journey.get("user_responses", [])
             user_story = "\n".join(user_responses)
             
             interrogation = orchestrator.stage3_investor_interrogation(diagnosis, user_story)
@@ -418,17 +477,23 @@ def render_investor_stage(orchestrator):
                 cached_interrogation = interrogation
     
     if cached_interrogation:
+        # 检查是否有错误
+        if "error" in cached_interrogation:
+            st.error(f"😔 {cached_interrogation['error']}")
+            return
+        
         four_acts = cached_interrogation.get("four_act_interrogation", {})
         
         # 问题本质高亮卡片（视觉焦点）
         st.markdown("### 💥 问题本质")
         root_cause = four_acts.get("act4_root_cause", "你面对的根本问题需要深入分析")
         
-        st.markdown(f'''
+        shock_html = f'''
         <div class="shock-card">
             🎯 {root_cause}
         </div>
-        ''', unsafe_allow_html=True)
+        '''
+        st.markdown(shock_html, unsafe_allow_html=True)
         
         # 四重奏质询内容（标签页展示）
         tab1, tab2, tab3, tab4 = st.tabs(["💥 假设攻击", "💰 机会成本", "📉 失败案例", "⚖️ 最终判决"])
@@ -482,6 +547,11 @@ def render_mentor_stage(orchestrator):
                 cached_teaching = teaching
     
     if cached_teaching:
+        # 检查是否有错误
+        if "error" in cached_teaching:
+            st.error(f"😔 {cached_teaching['error']}")
+            return
+        
         opening = cached_teaching.get("opening_statement", {})
         framework = cached_teaching.get("visual_framework", {})
         comparison = cached_teaching.get("power_comparison", {})
@@ -504,12 +574,13 @@ def render_mentor_stage(orchestrator):
                 st_mermaid(framework["code"])
             except ImportError:
                 # 降级到代码显示
-                st.markdown(f'''
+                mermaid_html = f'''
                 <div class="mermaid-container">
                     <pre><code>{framework["code"]}</code></pre>
                     <small>💡 这是流程图的Mermaid代码，在支持的环境中会显示为图表</small>
                 </div>
-                ''', unsafe_allow_html=True)
+                '''
+                st.markdown(mermaid_html, unsafe_allow_html=True)
         
         # 步骤分解
         if steps:
@@ -518,7 +589,7 @@ def render_mentor_stage(orchestrator):
             
             for i, step in enumerate(steps[:3]):
                 with cols[i % len(cols)]:
-                    st.markdown(f'''
+                    step_html = f'''
                     <div style="
                         background: #e3f2fd;
                         padding: 1rem;
@@ -530,7 +601,8 @@ def render_mentor_stage(orchestrator):
                         <p style="margin: 0.5rem 0;"><strong>原理：</strong>{step.get("explanation", "步骤说明")}</p>
                         <p style="margin: 0;"><strong>行动：</strong>{step.get("action", "具体行动")}</p>
                     </div>
-                    ''', unsafe_allow_html=True)
+                    '''
+                    st.markdown(step_html, unsafe_allow_html=True)
         
         # 平行宇宙对比
         st.markdown("### 📊 平行宇宙对比")
@@ -622,7 +694,7 @@ def render_assistant_stage(orchestrator):
                 with st.spinner("正在锻造您的专属认知武器..."):
                     all_data = {
                         "diagnosis": diagnosis,
-                        "user_responses": st.session_state.journey["user_responses"]
+                        "user_responses": st.session_state.get("user_responses", [])
                     }
                     
                     weapon_card = orchestrator.stage5_assistant_summary(
@@ -648,7 +720,7 @@ def render_final_weapon_card(weapon_card, name, reminder, scenarios):
     target_trap = sections[0].get("content", "认知陷阱") if len(sections) > 0 else "认知陷阱"
     core_principle = sections[1].get("content", "认知重构原理") if len(sections) > 1 else "认知重构原理"
     
-    st.markdown(f'''
+    weapon_html = f'''
     <div class="weapon-card">
         <div style="text-align: center; margin-bottom: 2rem;">
             <h1 style="margin: 0; font-size: 2.2rem;">🛡️ {name}</h1>
@@ -689,7 +761,8 @@ def render_final_weapon_card(weapon_card, name, reminder, scenarios):
             <small>🧠 认知黑匣子 • 15分钟认知觉醒之旅 • {datetime.now().strftime("%Y-%m-%d")}</small>
         </div>
     </div>
-    ''', unsafe_allow_html=True)
+    '''
+    st.markdown(weapon_html, unsafe_allow_html=True)
     
     # 保存功能
     col1, col2, col3 = st.columns(3)
@@ -749,4 +822,6 @@ def render_feedback_collection(orchestrator):
                 orchestrator.reset_journey()
                 if "mastery_passed" in st.session_state:
                     del st.session_state["mastery_passed"]
+                if "user_responses" in st.session_state:
+                    del st.session_state["user_responses"]
                 st.rerun()

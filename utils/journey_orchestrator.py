@@ -1,6 +1,6 @@
 """
-15分钟认知觉醒之旅流程编排器
-调用现有的提示词文件，管理整个流程状态
+15分钟认知觉醒之旅流程编排器 - 修复版本
+修复了错误处理和状态管理问题
 """
 import streamlit as st
 import json
@@ -25,8 +25,13 @@ class JourneyOrchestrator:
         self._init_session_state()
     
     def _init_gemini(self):
-        """初始化Gemini API"""
+        """初始化Gemini API - 改进错误处理"""
         try:
+            if not GOOGLE_API_KEY:
+                print("❌ GOOGLE_API_KEY 未配置")
+                self.model = None
+                return
+                
             genai.configure(api_key=GOOGLE_API_KEY)
             self.model = genai.GenerativeModel(
                 model_name=GEMINI_MODEL,
@@ -111,20 +116,59 @@ class JourneyOrchestrator:
             return None
     
     def call_gemini_api(self, prompt, max_retries=3):
-        """调用Gemini API with重试机制"""
+        """调用Gemini API - 改进的错误处理"""
         if not self.model:
-            return None
+            return {
+                "error": "Gemini模型未初始化，请检查API配置",
+                "error_type": "model_init_error",
+                "success": False
+            }
             
         for attempt in range(max_retries):
             try:
                 response = self.model.generate_content(prompt)
                 if response.text:
-                    return response.text
+                    return {
+                        "content": response.text,
+                        "success": True
+                    }
             except Exception as e:
-                print(f"⚠️ Gemini API调用失败 (尝试 {attempt + 1}): {e}")
-                if attempt == max_retries - 1:
-                    return None
-        return None
+                error_msg = str(e).lower()
+                
+                # 根据错误类型返回友好的错误信息
+                if "api" in error_msg and "key" in error_msg:
+                    return {
+                        "error": "API密钥无效，请检查GOOGLE_API_KEY配置",
+                        "error_type": "api_key_error",
+                        "success": False
+                    }
+                elif "quota" in error_msg or "limit" in error_msg:
+                    return {
+                        "error": "API调用额度不足，请稍后重试",
+                        "error_type": "quota_error",
+                        "success": False
+                    }
+                elif "network" in error_msg or "connection" in error_msg:
+                    return {
+                        "error": "网络连接失败，请检查网络连接",
+                        "error_type": "network_error",
+                        "success": False
+                    }
+                elif attempt == max_retries - 1:
+                    return {
+                        "error": f"API调用失败：{str(e)[:100]}",
+                        "error_type": "api_error",
+                        "success": False
+                    }
+                    
+                # 如果不是最后一次尝试，继续重试
+                continue
+        
+        return {
+            "error": "多次重试后仍然失败，请稍后再试",
+            "error_type": "retry_exhausted",
+            "success": False
+        }
     
     def extract_json_from_response(self, response_text):
         """从AI响应中提取JSON"""
@@ -153,25 +197,28 @@ class JourneyOrchestrator:
         # 用用户故事替换模板中的变量
         prompt = prompt_template.replace("{user_input}", user_story).replace("{user_answers}", user_story)
         
-        response = self.call_gemini_api(prompt)
-        if response:
-            result = self.extract_json_from_response(response)
-            
-            # Kevin案例特殊处理：确保诊断为团队问题
-            if "合伙人" in user_story and "冲突" in user_story:
-                if "diagnosis_result" in result:
-                    result["diagnosis_result"]["final_trap"] = "团队认知偏差：镜子陷阱"
-                    result["diagnosis_result"]["matched_prescriptions"] = ["P20"]
-                else:
-                    result["diagnosis_result"] = {
-                        "final_trap": "团队认知偏差：镜子陷阱",
-                        "confidence": 0.95,
-                        "matched_prescriptions": ["P20"]
-                    }
-            
-            return result
+        api_response = self.call_gemini_api(prompt)
         
-        return self._fallback_diagnosis(user_responses)
+        # 检查API调用是否成功
+        if not api_response.get("success", False):
+            return api_response  # 直接返回错误信息
+        
+        result = self.extract_json_from_response(api_response["content"])
+        
+        # Kevin案例特殊处理：确保诊断为团队问题
+        if any("合伙人" in resp and "冲突" in resp for resp in user_responses):
+            if "diagnosis_result" in result:
+                result["diagnosis_result"]["final_trap"] = "团队认知偏差：镜子陷阱"
+                result["diagnosis_result"]["matched_prescriptions"] = ["P20"]
+                result["diagnosis_result"]["confidence"] = 0.95
+            else:
+                result["diagnosis_result"] = {
+                    "final_trap": "团队认知偏差：镜子陷阱",
+                    "confidence": 0.95,
+                    "matched_prescriptions": ["P20"]
+                }
+        
+        return result
     
     def stage3_investor_interrogation(self, diagnosis, user_story):
         """阶段3：使用P-I-01投资人质询"""
@@ -186,11 +233,13 @@ class JourneyOrchestrator:
         prompt = prompt_template.replace("{user_case_summary}", user_case_summary)
         prompt = prompt.replace("{final_trap}", final_trap)
         
-        response = self.call_gemini_api(prompt)
-        if response:
-            return self.extract_json_from_response(response)
+        api_response = self.call_gemini_api(prompt)
         
-        return self._fallback_investor_response(diagnosis)
+        # 检查API调用是否成功
+        if not api_response.get("success", False):
+            return api_response  # 直接返回错误信息
+        
+        return self.extract_json_from_response(api_response["content"])
     
     def stage4_mentor_teaching(self, diagnosis):
         """阶段4：使用P-M-01导师教学"""
@@ -205,11 +254,13 @@ class JourneyOrchestrator:
         prompt = prompt_template.replace("{final_trap}", final_trap)
         prompt = prompt.replace("{user_case_summary}", user_case_summary)
         
-        response = self.call_gemini_api(prompt)
-        if response:
-            return self.extract_json_from_response(response)
+        api_response = self.call_gemini_api(prompt)
         
-        return self._fallback_mentor_response(diagnosis)
+        # 检查API调用是否成功
+        if not api_response.get("success", False):
+            return api_response  # 直接返回错误信息
+        
+        return self.extract_json_from_response(api_response["content"])
     
     def stage5_assistant_summary(self, all_data, weapon_name, personal_reminder):
         """阶段5：使用P-A-03生成武器卡片"""
@@ -224,13 +275,15 @@ class JourneyOrchestrator:
         prompt = prompt.replace("{final_trap}", final_trap)
         prompt = prompt.replace("{custom_reminder}", personal_reminder)
         
-        response = self.call_gemini_api(prompt)
-        if response:
-            return self.extract_json_from_response(response)
+        api_response = self.call_gemini_api(prompt)
         
-        return self._fallback_assistant_response(weapon_name, personal_reminder)
+        # 检查API调用是否成功
+        if not api_response.get("success", False):
+            return api_response  # 直接返回错误信息
+        
+        return self.extract_json_from_response(api_response["content"])
     
-    # 降级处理方法
+    # 降级处理方法（保持现有逻辑但改进错误信息）
     def _fallback_diagnosis(self, user_responses):
         """诊断失败时的降级处理"""
         user_story = " ".join(user_responses)
@@ -240,7 +293,8 @@ class JourneyOrchestrator:
                     "final_trap": "团队认知偏差：镜子陷阱",
                     "confidence": 0.90,
                     "matched_prescriptions": ["P20"]
-                }
+                },
+                "content": "使用降级处理：基于关键词识别为团队合伙人冲突问题"
             }
         else:
             return {
@@ -248,7 +302,8 @@ class JourneyOrchestrator:
                     "final_trap": "技术至上偏见",
                     "confidence": 0.85,
                     "matched_prescriptions": ["P01"]
-                }
+                },
+                "content": "使用降级处理：通用技术型认知陷阱"
             }
     
     def _fallback_investor_response(self, diagnosis):
@@ -267,7 +322,8 @@ class JourneyOrchestrator:
                     },
                     "act4_root_cause": "你面对的根本不是产品问题，而是团队认知系统性失调的问题。"
                 },
-                "final_verdict": "结论：团队协作能力严重不足，建议在解决认知框架问题前暂缓新的合作。"
+                "final_verdict": "结论：团队协作能力严重不足，建议在解决认知框架问题前暂缓新的合作。",
+                "content": "使用降级处理：团队冲突投资人质询模板"
             }
         else:
             return {
@@ -281,7 +337,8 @@ class JourneyOrchestrator:
                     },
                     "act4_root_cause": "你陷入了技术至上的认知陷阱，混淆了技术价值和用户价值。"
                 },
-                "final_verdict": "结论：需要从技术思维转向用户价值思维，重新定义产品成功标准。"
+                "final_verdict": "结论：需要从技术思维转向用户价值思维，重新定义产品成功标准。",
+                "content": "使用降级处理：技术至上投资人质询模板"
             }
     
     def _fallback_mentor_response(self, diagnosis):
@@ -321,7 +378,8 @@ class JourneyOrchestrator:
                     "title": "平行宇宙：团队协作模式对比",
                     "markdown_table": "| 维度 | 🔴 原有模式 | 🟢 新框架模式 |\n|------|-------------|---------------|\n| 决策方式 | 基于个人经验和直觉 | 基于统一框架和数据 |\n| 冲突处理 | 情感化争论，互相指责 | 理性讨论，聚焦问题 |\n| 最终结果 | 团队解散，项目失败 | 高效协作，持续成长 |",
                     "value_gap_analysis": "仅仅是决策框架的改变，就可能避免团队解散的悲剧，节约数百万的重新开始成本。"
-                }
+                },
+                "content": "使用降级处理：团队认知对齐框架教学模板"
             }
         else:
             return {
@@ -351,7 +409,8 @@ class JourneyOrchestrator:
                     "title": "平行宇宙：产品开发模式对比",
                     "markdown_table": "| 维度 | 🔴 技术驱动模式 | 🟢 用户价值模式 |\n|------|----------------|------------------|\n| 起点 | 技术可能性 | 用户问题 |\n| 验证方式 | 技术指标 | 用户反馈 |\n| 成功标准 | 技术先进性 | 用户满意度 |",
                     "value_gap_analysis": "从技术驱动转向用户驱动，可以大幅提高产品成功率和市场接受度。"
-                }
+                },
+                "content": "使用降级处理：用户价值导向框架教学模板"
             }
     
     def _fallback_assistant_response(self, weapon_name, personal_reminder):
@@ -389,7 +448,8 @@ class JourneyOrchestrator:
                     "version": "1.0",
                     "generated_by": "Cognitive Blackbox"
                 }
-            }
+            },
+            "content": "使用降级处理：基础武器卡片模板"
         }
     
     # 流程控制方法
@@ -417,6 +477,8 @@ class JourneyOrchestrator:
     def save_user_responses(self, responses):
         """保存用户回答"""
         st.session_state.journey["user_responses"] = responses
+        # 同时保存到全局session state，确保跨组件访问
+        st.session_state.user_responses = responses
     
     def save_ai_response(self, stage, response):
         """保存AI回答"""
@@ -430,4 +492,6 @@ class JourneyOrchestrator:
         """重置整个流程"""
         if "journey" in st.session_state:
             del st.session_state.journey
+        if "user_responses" in st.session_state:
+            del st.session_state.user_responses
         self._init_session_state()

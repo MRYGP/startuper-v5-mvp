@@ -1,6 +1,6 @@
 """
-15分钟认知觉醒之旅专用UI组件 - 修复版本
-修复了用户回答状态管理和HTML渲染问题
+15分钟认知觉醒之旅专用UI组件 - 完整修复版本
+修复了KeyError问题和所有已知bug
 """
 import streamlit as st
 import time
@@ -8,9 +8,35 @@ from datetime import datetime
 from utils.journey_orchestrator import JourneyOrchestrator
 
 def render_15min_journey():
-    """渲染15分钟觉醒之旅主入口"""
-    orchestrator = JourneyOrchestrator()
-    stage = orchestrator.get_current_stage()
+    """渲染15分钟觉醒之旅主入口 - 修复初始化问题"""
+    
+    # 确保orchestrator正确初始化
+    try:
+        orchestrator = JourneyOrchestrator()
+        
+        # 强制确保session state正确初始化
+        if "journey" not in st.session_state:
+            orchestrator._init_session_state()
+        
+        # 确保kevin_case_data存在
+        if "kevin_case_data" not in st.session_state.journey:
+            kevin_case_data = orchestrator._load_kevin_case()
+            st.session_state.journey["kevin_case_data"] = kevin_case_data
+        
+        stage = orchestrator.get_current_stage()
+        
+    except Exception as e:
+        # 如果初始化失败，显示错误并提供重置选项
+        st.error(f"初始化失败：{str(e)}")
+        st.error("可能的原因：Kevin案例文件缺失或格式错误")
+        
+        if st.button("🔄 重置并重新开始", type="primary"):
+            # 清除所有相关状态
+            for key in ["journey", "user_responses"]:
+                if key in st.session_state:
+                    del st.session_state[key]
+            st.rerun()
+        return
     
     # 应用自定义CSS
     apply_journey_css()
@@ -19,18 +45,39 @@ def render_15min_journey():
     render_progress_indicator(stage)
     
     # 根据阶段渲染对应界面
-    if stage == 0:
-        render_opening_stage(orchestrator)
-    elif stage == 1:
-        render_demo_input_stage(orchestrator)
-    elif stage == 2:
-        render_diagnosis_stage(orchestrator)
-    elif stage == 3:
-        render_investor_stage(orchestrator)
-    elif stage == 4:
-        render_mentor_stage(orchestrator)
-    elif stage == 5:
-        render_assistant_stage(orchestrator)
+    try:
+        if stage == 0:
+            render_opening_stage(orchestrator)
+        elif stage == 1:
+            render_demo_input_stage(orchestrator)
+        elif stage == 2:
+            render_diagnosis_stage(orchestrator)
+        elif stage == 3:
+            render_investor_stage(orchestrator)
+        elif stage == 4:
+            render_mentor_stage(orchestrator)
+        elif stage == 5:
+            render_assistant_stage(orchestrator)
+    except Exception as e:
+        st.error(f"渲染阶段{stage}时出错：{str(e)}")
+        st.error("请尝试重新开始或联系技术支持")
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("🔄 重置流程"):
+                for key in ["journey", "user_responses"]:
+                    if key in st.session_state:
+                        del st.session_state[key]
+                st.rerun()
+        
+        with col2:
+            if st.button("🏠 返回首页"):
+                st.session_state.current_page = "🏠 产品介绍"
+                st.rerun()
+        
+        with col3:
+            if st.button("📊 查看错误详情"):
+                st.exception(e)
 
 def apply_journey_css():
     """应用15分钟流程专用CSS样式"""
@@ -266,7 +313,7 @@ def render_daily_wisdom():
     st.markdown(wisdom_html, unsafe_allow_html=True)
 
 def render_demo_input_stage(orchestrator):
-    """阶段1：交互式Demo输入 - 修复用户回答状态管理"""
+    """阶段1：交互式Demo输入 - 修复KeyError和状态管理问题"""
     render_ai_role_header("主持人", 1, "温和引导，深度聚焦", "#667eea")
     
     st.markdown("## 📋 请回答以下6个问题")
@@ -275,6 +322,27 @@ def render_demo_input_stage(orchestrator):
     # 确保Session State正确初始化
     if "user_responses" not in st.session_state:
         st.session_state.user_responses = []
+    
+    # 修复：安全地获取kevin_case_data
+    if "journey" not in st.session_state or "kevin_case_data" not in st.session_state.journey:
+        # 如果journey或kevin_case_data不存在，重新初始化
+        if "journey" not in st.session_state:
+            st.session_state.journey = {}
+        
+        # 使用默认Kevin案例数据
+        st.session_state.journey["kevin_case_data"] = {
+            "case_name": "技术合伙人产品方向冲突",
+            "protagonist": "Kevin",
+            "six_answers": [
+                "我和技术合伙人一起做企业协作SaaS，我负责产品和融资，他负责研发。我们在产品方向上产生了严重分歧。",
+                "我们预期一年内完成A轮融资，覆盖1000家企业用户。实际上争论了8个月，产品既没有技术领先也没有抢到市场先机，现在就剩我一个人。",
+                "我最笃定的信念是：只要找到对的人，事情就一定能做成。我觉得我们三个人的组合几乎是完美的。",
+                "一个师兄警告过我三人合伙制很危险，但我觉得他太悲观了。我们关系这么好，怎么可能因为决策机制闹矛盾？",
+                "我最困惑的是：为什么三个都很聪明的人，在一起反而做不出聪明的决策？作为CEO，我应该怎么处理合伙人之间的深层认知差异？",
+                "我希望能理解团队合作背后的深层逻辑，特别是认知层面的问题。我需要一套思维框架来避免再次陷入同样的认知陷阱。"
+            ],
+            "expected_diagnosis": "团队认知偏差：镜子陷阱"
+        }
     
     questions = [
         "你做了什么事情没有达到预期的效果？",
@@ -285,8 +353,9 @@ def render_demo_input_stage(orchestrator):
         "你最希望我们帮你解决什么问题？"
     ]
     
+    # 现在安全地访问kevin_case_data
     kevin_case = st.session_state.journey["kevin_case_data"]
-    kevin_answers = kevin_case["six_answers"]
+    kevin_answers = kevin_case.get("six_answers", [])
     demo_mode = orchestrator.is_demo_mode()
     
     # 关键修复：使用Session State中的列表长度
@@ -321,7 +390,7 @@ def render_demo_input_stage(orchestrator):
                 # 显示Kevin的Demo答案
                 demo_html = f'''
                 <div class="demo-answer-box">
-                    <small style="color: #667eea; font-weight: bold;">💭 {kevin_case["protagonist"]}的回答：</small><br>
+                    <small style="color: #667eea; font-weight: bold;">💭 {kevin_case.get("protagonist", "Kevin")}的回答：</small><br>
                     <div style="margin-top: 0.5rem;">{demo_answer}</div>
                 </div>
                 '''

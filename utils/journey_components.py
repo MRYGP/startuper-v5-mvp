@@ -39,21 +39,22 @@ def render_15min_journey():
         return
     
     # 应用自定义CSS
-        apply_journey_css()
+    apply_journey_css()
     
     # 渲染进度指示器
-        render_progress_indicator(stage)
+    render_progress_indicator(stage)
     
     # 根据阶段渲染对应界面
     try:
-       # 检查是否已完成流程（优先检查）
-feedback_submitted = st.session_state.get("feedback_submitted", False)
-st.write(f"🔍 主流程调试：feedback_submitted = {feedback_submitted}")  # 调试信息
-if feedback_submitted:
-    st.write("✅ 检测到已提交反馈，显示完成页面")  # 调试信息
-    render_journey_completion()
-    return
-        elif stage == 0:  # ← 4个空格
+        # 检查是否已完成流程（优先检查）
+        feedback_submitted = st.session_state.get("feedback_submitted", False)
+        st.write(f"🔍 主流程调试：feedback_submitted = {feedback_submitted}")  # 调试信息
+        
+        if feedback_submitted:
+            st.write("✅ 检测到已提交反馈，显示完成页面")  # 调试信息
+            render_journey_completion()
+            return
+        elif stage == 0:
             render_opening_stage(orchestrator)
         elif stage == 1:
             render_demo_input_stage(orchestrator)
@@ -813,11 +814,12 @@ def render_feedback_collection(orchestrator):
         )
     
     if st.button("📝 提交反馈", type="primary", key="submit_feedback"):    
-    # 关键修复：设置反馈已提交标记
-    st.session_state["feedback_submitted"] = True
-    st.success("✅ 反馈已提交！状态已设置！")  # 调试信息
-    st.write(f"🔍 调试: feedback_submitted = {st.session_state.get('feedback_submitted')}")  # 4个空格
-    st.rerun()  # 重新渲染页面，将显示完成页面
+        # 关键修复：设置反馈已提交标记
+        st.session_state["feedback_submitted"] = True
+        st.success("✅ 反馈已提交！状态已设置！")  # 调试信息
+        st.write(f"🔍 调试: feedback_submitted = {st.session_state.get('feedback_submitted')}")  # 调试信息
+        st.rerun()  # 重新渲染页面，将显示完成页面
+
 def render_journey_completion():
     """渲染流程完成页面 - 新增函数"""
     st.markdown("### 🎉 感谢您的宝贵反馈！")
